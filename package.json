@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Loads FEC data into a database",
   "license": "MIT",
+  "scripts": {
+    "start": "node src/util/sync"
+  },
   "dependencies": {
     "fec-parse": "^0.2.1-beta.2",
     "moment": "^2.13.0",
