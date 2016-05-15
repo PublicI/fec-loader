@@ -2,5 +2,11 @@
   "name": "fec-loader",
   "version": "0.1.0",
   "description": "Loads FEC data into a database",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "fec-parse": "^0.2.1-beta.2",
+    "moment": "^2.13.0",
+    "readdir-recursive": "0.0.4",
+    "sequelize": "^3.23.2"
+  }
 }
