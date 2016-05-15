@@ -7,6 +7,7 @@ var basename = path.basename(module.filename);
 var sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS,{
     host: process.env.DB_HOST,
     dialect: process.env.DB_DRIVER,
+    port: process.env.PORT,
     define: {
         createdAt: 'created_date',
         updatedAt: 'updated_date',
