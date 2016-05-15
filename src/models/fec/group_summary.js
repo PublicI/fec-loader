@@ -84,11 +84,6 @@ module.exports = function(sequelize, DataTypes) {
                     constraints: false,
                     foreignKey: 'filing_id'
                 });
-/*
-                GroupSummary.belongsTo(models.cpi_group, {
-                    constraints: false,
-                    foreignKey: 'filer_committee_id_number'
-                });*/
             },
             match: function (row) {
                 if (row.form_type && row.form_type.match(/^(F5)/) && row.report_code) {

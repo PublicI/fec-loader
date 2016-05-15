@@ -61,10 +61,6 @@ module.exports = function(sequelize, DataTypes) {
     },{
         classMethods: {
             associate: function(models) {
-                Expenditure.hasMany(models.cpi_exp_code_match,{
-                    constraints: false
-                });
-
                 Expenditure.belongsTo(models.fec_filing,{
                     as: 'Filing',
                     constraints: false,

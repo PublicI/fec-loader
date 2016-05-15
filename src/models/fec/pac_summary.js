@@ -169,11 +169,6 @@ module.exports = function(sequelize, DataTypes) {
                     constraints: false,
                     foreignKey: 'filing_id'
                 });
-/*
-                PACSummary.hasMany(models.cpi_group_id,{
-                    constraints: false,
-                    foreignKey: 'filer_committee_id_number'
-                });*/
             },
             match: function (row) {
                 if (row.form_type && row.form_type.match(/^(F3X)/)) {

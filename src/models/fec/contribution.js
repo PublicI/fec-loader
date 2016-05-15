@@ -65,20 +65,6 @@ module.exports = function(sequelize, DataTypes) {
                     constraints: false,
                     foreignKey: 'filing_id'
                 });
-
-                Contribution.belongsTo(models.cpi_group_id,{
-                    as: 'recipient',
-                    constraints: false,
-                    foreignKey: 'filer_committee_id_number',
-                    // targetKey: 'other_id'
-                });
-
-                Contribution.belongsTo(models.cpi_group_id,{
-                    as: 'donor',
-                    constraints: false,
-                    foreignKey: 'donor_committee_fec_id',
-                    // targetKey: 'other_id'
-                });
             },
             match: function (row) {
                 if (row.form_type && row.form_type.match(/^SB/)) {
