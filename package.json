@@ -6,6 +6,7 @@
   "dependencies": {
     "fec-parse": "^0.2.1-beta.2",
     "moment": "^2.13.0",
+    "pg": "^4.5.5",
     "readdir-recursive": "0.0.4",
     "sequelize": "^3.23.2"
   }
