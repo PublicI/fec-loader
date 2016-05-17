@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS fec_amended_filings;
 CREATE VIEW fec_amended_filings
 AS
 SELECT

@@ -3,13 +3,15 @@ var fs = require('fs');
 function sync() {
     var models = require('../models');
 
-    models.sequelize.query(fs.readFileSync(__dirname + '/../models/fec/amended_filing.sql'))
+    models.sequelize.sync()
         .then(function () {
-            models.sequelize.sync();
+            models.sequelize.query(fs.readFileSync(__dirname + '/../models/fec/amended_filing.sql','utf8'));
         });
 }
 
 if (process.env.DB_DRIVER == 'postgres') {
+    // try to create database first if dialect is postgres
+    
     var pg = require('pg');
 
     var conString = 'postgres://' + process.env.DB_USER + ':' + process.env.DB_PASS +
