@@ -137,52 +137,56 @@ function importFiling(task,callback) {
 
     function processFiling(openStream, cb) {
         console.log('== importing ' + filing_id + ' ==');
-/*
-        var pipe = fs.createReadStream(file.path + '/' + file.name)
-                        .pipe(JSONStream.parse('rows.*'));*/
 
         var i = 0;
 
-        var parse = JSONStream.parse('rows.*'); // parser();
+        var parse = parser();
 
         cargo.pause();
 
-        openStream()
-            .pipe(parse)
-            .on('data',function (row) {
-                row.filing_id = filing_id;
-                row.model = formModels.find(function (model) {
-                    return model.match(row);
-                });
+        openStream(function (err,stream) {
+            if (err) {
+                error(err);
+                return;
+            }
 
-                if (typeof row.model !== 'undefined' && !finished) {
-                    queued++;
-
-                    cargo.push(row,function (err) {
-                        if (err) {
-                            error();
-                        }
+            stream
+                .pipe(parse)
+                .on('data',function (row) {
+                    row.filing_id = filing_id;
+                    row.model = formModels.find(function (model) {
+                        return model.match(row);
                     });
-                }
 
-                if (i === 1 && (row.model_index !== null ||
-                    (row.form_type && row.form_type.match(/^(F24)/)))) {
-                    cargo.resume();
-                }
-                else if (i === 1) {
-                    cargo.kill();
-                }
+                    if (typeof row.model !== 'undefined' && !finished) {
+                        queued++;
 
-                i++;
-            })
-            .on('end',function () {
-                cargo.drain = done;
+                        cargo.push(row,function (err) {
+                            if (err) {
+                                error();
+                            }
+                        });
+                    }
 
-                if (cargo.length() === 0) {
-                    done();
-                }
-            })
-            .on('error',error);
+                    if (i === 1 && (row.model_index !== null ||
+                        (row.form_type && row.form_type.match(/^(F24)/)))) {
+                        cargo.resume();
+                    }
+                    else if (i === 1) {
+                        cargo.kill();
+                    }
+
+                    i++;
+                })
+                .on('end',function () {
+                    cargo.drain = done;
+
+                    if (cargo.length() === 0) {
+                        done();
+                    }
+                })
+                .on('error',error);
+        });
     }
 
     function checkForFiling(id,cb) {
@@ -214,39 +218,10 @@ function importFiling(task,callback) {
 
 }
 
-function init(path,cb) {
-    // cycle through the filings, add them to the process queue
-    fs.readdir(path, function(err, files) {
-        if (err) throw err;
+module.exports = function (tasks,cb) {
+    var q = async.queue(importFiling, 1);
 
-        var q = async.queue(importFiling, 1);
+    q.push(tasks);
 
-        files.reverse().forEach(function(file) {
-            if (file.indexOf('.json') !== -1) {
-                q.push({
-                    name: file,
-                    openStream: function () {
-                        return fs.createReadStream(path + '/' + file);
-                    }
-                });
-            }
-        });
-
-        q.drain = cb;
-
-    });
-}
-
-if (require.main === module) {
-    var basePath = __dirname + '/../../data/';
-
-    init(basePath + 'fec/parsed',function (err) {
-        if (err) {
-            console.log(err);
-        }
-
-        console.log('done');
-    });
-}
-
-module.exports = init;
+    return q;
+};
