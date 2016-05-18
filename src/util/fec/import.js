@@ -1,7 +1,7 @@
 var models  = require('../../models'),
     async = require('async'),
     numeral = require('numeral'),
-    JSONStream = require('JSONStream'),
+    parser = require('fec-parse'),
     _ = require('lodash');
 
 var payload = 200; // how many rows get processed by cargo at a time
@@ -105,6 +105,11 @@ function importFiling(task,callback) {
     }
 
     function queueRows(rows,cb) {
+        if (finished) {
+            cb();
+            return;
+        }
+
         var modelGroups = _(rows)
                     .groupBy(function (row) {
                         return row.model.name;
@@ -130,24 +135,27 @@ function importFiling(task,callback) {
         q.drain = cb;
     }
 
-    function processFiling(file, cb) {
+    function processFiling(openStream, cb) {
         console.log('== importing ' + filing_id + ' ==');
-
+/*
         var pipe = fs.createReadStream(file.path + '/' + file.name)
-                        .pipe(JSONStream.parse('rows.*'));
+                        .pipe(JSONStream.parse('rows.*'));*/
 
         var i = 0;
 
+        var parse = JSONStream.parse('rows.*'); // parser();
+
         cargo.pause();
 
-        pipe
+        openStream()
+            .pipe(parse)
             .on('data',function (row) {
                 row.filing_id = filing_id;
                 row.model = formModels.find(function (model) {
                     return model.match(row);
                 });
 
-                if (typeof row.model !== 'undefined') {
+                if (typeof row.model !== 'undefined' && !finished) {
                     queued++;
 
                     cargo.push(row,function (err) {
@@ -200,7 +208,7 @@ function importFiling(task,callback) {
         startTransaction(function (t) {
             transaction = t;
 
-            processFiling(task,done);
+            processFiling(task.openStream,done);
         });
     });
 
@@ -216,8 +224,10 @@ function init(path,cb) {
         files.reverse().forEach(function(file) {
             if (file.indexOf('.json') !== -1) {
                 q.push({
-                    path: path,
-                    name: file
+                    name: file,
+                    openStream: function () {
+                        return fs.createReadStream(path + '/' + file);
+                    }
                 });
             }
         });
