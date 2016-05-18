@@ -7,9 +7,12 @@
     "start": "node src/util/sync"
   },
   "dependencies": {
+    "JSONStream": "^1.1.1",
+    "async": "^2.0.0-rc.5",
     "fec-parse": "^0.2.1-beta.2",
     "ftp": "^0.3.10",
     "moment": "^2.13.0",
+    "numeral": "^1.5.3",
     "pg": "^4.5.5",
     "readdir-recursive": "0.0.4",
     "sequelize": "^3.23.2"

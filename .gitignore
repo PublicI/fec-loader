@@ -1,2 +1,3 @@
 node_modules
 src/data
+src/bin/test.sh
