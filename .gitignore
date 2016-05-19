@@ -1,4 +1,4 @@
 node_modules
 src/data
-src/bin/test.sh
+src/bin/*.sh
 errors.log

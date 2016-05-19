@@ -1,6 +1,6 @@
 var async = require('async'),
     fs = require('fs'),
-    importFilings = require('./import'),
+    filingQueue = require('./import'),
     yauzl = require('yauzl');
 
 var filings_dir = __dirname + '/../../data/fec/filings';
@@ -11,12 +11,12 @@ function unzipFile(file,cb) {
         }, function(err, zipfile) {
         if (err) throw err;
 
-        var q = null;
+        filingQueue.drain = null;
 
         zipfile.on('entry', function(entry) {
             if (entry.fileName.indexOf('.fec') !== -1) {
 
-                q = importFilings({
+                filingQueue.push({
                     name: entry.fileName,
                     openStream: function (cb) {
                         zipfile.openReadStream(entry, cb);
@@ -27,7 +27,7 @@ function unzipFile(file,cb) {
         });
 
         zipfile.once('end', function () {
-            q.drain = function () {
+            filingQueue.drain = function () {
                 zipfile.close();
 
                 cb();

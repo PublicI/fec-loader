@@ -26,23 +26,28 @@ function importFiling(task,callback) {
     function error(err) {
         cargo.kill();
 
-        finished = true;
+        if (!finished) {
+            finished = true;
 
-        console.error(err);
+            console.error(err);
 
-        if (transaction !== null) {
-            console.error('rolling back transaction');
+            if (transaction !== null) {
+                console.error('rolling back transaction');
 
-            transaction.rollback()
-                .then(callback.bind(this,err))
-                .catch(function () {
-                    console.error('error rolling back transaction');
+                transaction.rollback()
+                    .then(callback.bind(this,err))
+                    .catch(function () {
+                        console.error('error rolling back transaction');
 
-                    callback(err);
-                });
+                        callback(err);
+                    });
+            }
+            else {
+                callback(err);
+            }
         }
         else {
-            callback(err);
+            throw new Error('error called for ' + filing_id + ', but already finished');
         }
     }
 
@@ -60,6 +65,12 @@ function importFiling(task,callback) {
                 })
                 .catch(error);
         }
+        else if (finished) {
+            throw new Error('done called for ' + filing_id + ', but already finished');
+        }
+        else if (processed !== queued) {
+            throw new Error('done called for ' + filing_id + ', but processed is ' + processed + ' and queued is ' + queued);
+        }
     }
 
     function startTransaction(cb) {
@@ -76,11 +87,14 @@ function importFiling(task,callback) {
 
         rows = task.rows;
 
-        if ('report_id' in rows[0] && rows[0].report_id === '') {
+        if (rows[0].report_id === '') {
             rows[0].report_id = null;
         }
+        if (rows[0].report_number === '') {
+            rows[0].report_number = null;
+        }
 
-        console.log('processing ' + numeral(processed).format() + ' - ' + numeral(processed+task.rows.length).format() + ' of ' + numeral(queued).format());
+        // console.log('processing ' + numeral(processed).format() + ' - ' + numeral(processed+task.rows.length).format() + ' of ' + numeral(queued).format());
 
         rows[0].model
             .bulkCreate(rows,{
@@ -93,7 +107,7 @@ function importFiling(task,callback) {
             })
             .catch(function (err) {
                 if (err.name == 'SequelizeUniqueConstraintError') {
-                    console.log('already inserted ' + rows[0].filing_id);
+                    // console.log('already inserted ' + rows[0].filing_id);
                 }
                 else {
                     console.error('error inserting ' + rows[0].filing_id + ':');
@@ -181,7 +195,7 @@ function importFiling(task,callback) {
                 .on('end',function () {
                     cargo.drain = done;
 
-                    if (cargo.length() === 0) {
+                    if (queued === 0) {
                         done();
                     }
                 })
@@ -193,7 +207,7 @@ function importFiling(task,callback) {
         models.fec_filing.findById(id)
             .then(function (result) {
                 if (result) {
-                    console.log('already inserted ' + filing_id);
+                    //console.log('already inserted ' + filing_id);
 
                     callback();
                 }
@@ -218,10 +232,10 @@ function importFiling(task,callback) {
 
 }
 
-module.exports = function (tasks,cb) {
+function FilingQueue() {
     var q = async.queue(importFiling, 1);
 
-    q.push(tasks);
-
     return q;
-};
+}
+
+module.exports = new FilingQueue();
