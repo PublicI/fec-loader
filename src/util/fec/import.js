@@ -94,7 +94,7 @@ function importFiling(task,callback) {
             rows[0].report_number = null;
         }
 
-        // console.log('processing ' + numeral(processed).format() + ' - ' + numeral(processed+task.rows.length).format() + ' of ' + numeral(queued).format());
+        console.log('processing ' + numeral(processed).format() + ' - ' + numeral(processed+task.rows.length).format() + ' of ' + numeral(queued).format());
 
         rows[0].model
             .bulkCreate(rows,{
