@@ -68,7 +68,7 @@ module.exports = function(sequelize, DataTypes) {
                 });
             },
             match: function (row) {
-                if (row.form_type && row.form_type.match(/^SA/)) {
+                if (row.form_type && row.form_type.match(/^SB/)) {
                     return true;
                 }
                 return false;

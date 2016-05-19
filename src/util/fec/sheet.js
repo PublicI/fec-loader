@@ -2,22 +2,33 @@ var _ = require('lodash'),
     async = require('async'),
     fs = require('fs'),
     models  = require('../../models'),
+    moment = require('moment'),
     numeral = require('numeral'),
     xlsx = require('xlsx-stream');
 
-var filing_id = 1070785;
+var filing_id = 982033;
 
 function moneyFormat(value) {
-    return numeral(value).format('$0,0.00');
+    return numeral(value).format('0,0.00');
+}
+
+function dateFormat(date) {
+    return moment(date.coverage_from_date).format('M/D/YYYY');
 }
 
 function summaryFormat(filing_id,row,type) {
     var result = [];
 
-    result.push([row.committee_name,
-        '=HYPERLINK("http://docquery.fec.gov/cgi-bin/forms/' + row.filer_committee_id_number + '/' + filing_id + '/","This report")',
-        '=HYPERLINK("http://www.fec.gov/fecviewer/CandidateCommitteeDetail.do?candidateCommitteeId=' + row.filer_committee_id_number + '&tabIndex=3","All reports from this committee")']);
-    result.push(['Covering period ' + row.coverage_from_date + ' through ' + row.coverage_through_date]);
+    result.push([row.committee_name,'http://docquery.fec.gov/cgi-bin/forms/' + row.filer_committee_id_number + '/' +
+            filing_id + '/','http://www.fec.gov/fecviewer/CandidateCommitteeDetail.do?candidateCommitteeId=' +
+            row.filer_committee_id_number + '&tabIndex=3']);
+        /*
+        { v: 'ok', f: 'HYPERLINK("http://docquery.fec.gov/cgi-bin/forms/' + row.filer_committee_id_number + '/' +
+            filing_id + '/","This report")'},
+        { v: 'ok', f: 'HYPERLINK("http://www.fec.gov/fecviewer/CandidateCommitteeDetail.do?candidateCommitteeId=' +
+            row.filer_committee_id_number + '&tabIndex=3","All reports from this committee")' }]);*/
+    result.push(['Covering period ' + dateFormat(row.coverage_from_date) +
+                    ' through ' + dateFormat(row.coverage_through_date)]);
     result.push(['',
         'Column A This Period',
         'Column B ' + (type == 'pac' ? 'Year' : 'Cycle') + ' to Date']);
@@ -58,7 +69,7 @@ function getSummary(filing_id,type,cb) {
 }
 
 function transactionsFormat(transactions) {
-    var result = _.keys(transactions[0].toJSON());
+    var result = [_.keys(transactions[0].toJSON())];
 
     return result.concat(transactions.map(function (transaction) {
         return _.values(transaction.toJSON());
@@ -74,7 +85,7 @@ function getTransactions(filing_id,type,cb) {
         order: [[type + '_amount','DESC']]
     })
     .then(function (transactions) {
-        if (transactions) {
+        if (transactions && transactions.length > 0) {
             cb(null,transactionsFormat(transactions));
         }
         else {
@@ -93,7 +104,7 @@ function writeSheet(x,name,rows) {
 }
 
 var x = xlsx();
-x.pipe(fs.createWriteStream('./out.xlsx'));
+x.pipe(fs.createWriteStream(__dirname + '/../../data/fec/sheets/' + filing_id + '.xlsx'));
 
 async.waterfall([function (cb) {
     getSummary(filing_id,'presidential',function (err,result) {
@@ -119,7 +130,9 @@ async.waterfall([function (cb) {
     getTransactions(filing_id,'contribution',function (err,result) {
         if (err) throw err;
 
-        writeSheet(x,'contributions',result);
+        if (typeof result != 'undefined' && result) {
+            writeSheet(x,'contributions',result);
+        }
 
         cb();
     });
@@ -127,7 +140,9 @@ async.waterfall([function (cb) {
     getTransactions(filing_id,'expenditure',function (err,result) {
         if (err) throw err;
 
-        writeSheet(x,'expenditures',result);
+        if (typeof result != 'undefined' && result) {
+            writeSheet(x,'expenditures',result);
+        }
 
         cb();
     });
