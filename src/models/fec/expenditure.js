@@ -37,7 +37,7 @@ module.exports = function(sequelize, DataTypes) {
         expenditure_purpose_descrip: DataTypes.STRING(255),
         category_code: DataTypes.STRING(10),
         beneficiary_committee_fec_id: DataTypes.STRING(50),
-        beneficiary_committee_name: DataTypes.STRING(100),
+        beneficiary_committee_name: DataTypes.STRING(255),
         beneficiary_candidate_fec_id: DataTypes.STRING(50),
         beneficiary_candidate_last_name: DataTypes.STRING(100),
         beneficiary_candidate_first_name: DataTypes.STRING(100),
