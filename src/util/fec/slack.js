@@ -1,12 +1,9 @@
 var Slack = require('slack-client'),
-    yaml = require('js-yaml'),
     fs = require('fs'),
     models = require('../../models'),
     moment = require('moment');
 
-var config = yaml.safeLoad(fs.readFileSync(__dirname + '/../../../config.yml', 'utf8'));
-
-slack = new Slack(config.slack.token, true, true);
+slack = new Slack(process.env.SLACK_TOKEN, true, true);
 
 var filing_lookup = {};
 
@@ -47,7 +44,7 @@ slack.on('open', function() {
     setInterval(function () {
         checkForFilings(channel,'pac',false);
         checkForFilings(channel,'presidential',false);
-    },1000*30);
+    },1000*10);
 });
 
 slack.login();

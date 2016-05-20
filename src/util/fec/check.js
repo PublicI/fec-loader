@@ -1,92 +1,66 @@
-var request = require('request'),
-    _ = require('lodash'),
-    queue = require('queue-async'),
+var async = require('async'),
+    request = require('request'),
+    models  = require('../../models'),
     fs = require('fs'),
-    parse = require('./parse'),
-    importFilings = require('./import'),
-    models = require('../../models'),
-    moment = require('moment');
+    filingQueue = require('./import');
 
-var key = 'hJ3L2UDRQr6TxYg16lfVXCgiiYvyVhP3NL9mEQI3';
+var lookAhead = 100,
+    lookBehind = 100,
+    interval = 3000;
 
-function check(cb) {
-    console.log('checking ' + moment().format('YYYY/MM/DD'));
-    var found = false;
+var temp_dir = path.resolve(__dirname + '/../../data/fec/downloaded');
 
-    var url = 'https://api.propublica.org/campaign-finance/v1/2016/filings/' + moment().format('YYYY/MM/DD') + '.json';
+function checkForFiling(filing_id,cb) {
+    console.log('checking for ' + filing_id);
 
-    request({url: url, headers: {'X-API-Key':key}}, function(error, response, body) {
-        if (!error && response.statusCode == 200) {
-            var res = JSON.parse(body);
+    var filePath = temp_dir + '/' + filing_id + '.fec';
 
-            var q = queue(1);
+    fs.exists(filePath,function (exists) {
+        if (!exists) {
+           request
+                .get('http://docquery.fec.gov/dcdev/posted/' + filing_id + '.fec')
+                .on('error', function(err) {
+                    console.log(err);
 
-            res.results.forEach(function (result) {
-                if (commmitteeIDs.indexOf(result.fec_committee_id) !== -1) {
-                    q.defer(function (filing_id,cb) {
-
-                        var filePath = __dirname + '/../../data/fec/downloaded/' + filing_id + '.fec';
-
-                        fs.exists(filePath,function (exists) {
-                            if (!exists) {
-                                console.log('downloading ' + filing_id);
-                                found = true;
-
-                                request
-                                    .get('http://docquery.fec.gov/dcdev/posted/' + filing_id + '.fec')
-                                    .on('error', function(err) {
-                                        console.log(err);
-                                    })
-                                    .on('end',function () {
-                                        setTimeout(cb,10000);
-                                    })
-                                    .pipe(fs.createWriteStream(filePath));
-                            }
-                            else {
-                                console.log(filing_id + ' not downloaded, already exists');
-                                cb();
-                            }
-                        });
-
-
-                    },result.filing_id);
-                }
-            });
-
-            q.awaitAll(function () {
-                if (found) {
-                    parse(__dirname + '/../../data/fec/downloaded/',function () {
-                        importFilings(function () {
-                            console.log('waiting');
-                            setTimeout(cb,1000*60*2);
-                        });
+                    setTimeout(cb,interval);
+                })
+                .on('end',function () {
+                    filingQueue.push({
+                        name: filing_id,
+                        openStream: function (cb) {
+                            fs.createReadStream(filePath, cb);
+                        }
                     });
-                }
-                else {
-                    console.log('nothing found');
-                    setTimeout(cb,1000*60*2);
-                }
-            });
 
-
+                    setTimeout(cb,interval);
+                })
+                .pipe(fs.createWriteStream(filePath));
         }
         else {
-            console.error(error);
-
-            setTimeout(cb,1000*60*2);
+            cb();
         }
     });
 }
 
-var commmitteeIDs = [];
+function queueFilingsToCheck() {
+    models.fec_filing.findAll({
+        attributes: ['filing_id'],
+        limit: lookBehind,
+        order: [['filing_id','DESC']]
+    })
+    .then(function (filings) {
+        filings = filings.map(function (filing) {
+            return filing.filing_id;
+        });
 
-function init() {
-    models.cpi_group.getCommittees(models,function (err,committees) {
-        commmitteeIDs = _.pluck(committees,'id');
+        var q = async.queue(checkForFiling,1);
 
-        check(init);
+        for (var i = filings[filings.length-1]; i <= filings[0]+lookAhead; i++) {
+            if (filings.indexOf(i) === -1) {
+                q.push(i);
+            }
+        }
+
+        q.drain = queueFilingsToCheck;
     });
 }
-
-init();
-

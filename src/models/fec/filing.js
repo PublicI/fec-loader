@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
         record_type: DataTypes.STRING(100),
         ef_type: DataTypes.STRING(100),
         fec_version: DataTypes.STRING(100),
-        soft_name: DataTypes.STRING(100),
+        soft_name: DataTypes.STRING(255),
         soft_ver: DataTypes.STRING(100),
         report_id: {
             type: DataTypes.INTEGER,

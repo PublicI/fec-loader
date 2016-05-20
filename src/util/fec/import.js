@@ -107,7 +107,7 @@ function importFiling(task,callback) {
             })
             .catch(function (err) {
                 if (err.name == 'SequelizeUniqueConstraintError') {
-                    // console.log('already inserted ' + rows[0].filing_id);
+                    console.log('already inserted ' + rows[0].filing_id);
                 }
                 else {
                     console.error('error inserting ' + rows[0].filing_id + ':');
@@ -152,11 +152,9 @@ function importFiling(task,callback) {
     function processFiling(openStream, cb) {
         console.log('== importing ' + filing_id + ' ==');
 
-        var i = 0;
+        // var i = 0;
 
         var parse = parser();
-
-        cargo.pause();
 
         openStream(function (err,stream) {
             if (err) {
@@ -181,21 +179,21 @@ function importFiling(task,callback) {
                             }
                         });
                     }
-
+/*
                     if (i === 1 && (row.model_index !== null ||
                         (row.form_type && row.form_type.match(/^(F24)/)))) {
                         cargo.resume();
                     }
                     else if (i === 1) {
                         cargo.kill();
-                    }
+                    }*/
 
-                    i++;
+                    // i++;
                 })
                 .on('end',function () {
                     cargo.drain = done;
 
-                    if (queued === 0) {
+                    if (processed === queued) {
                         done();
                     }
                 })
