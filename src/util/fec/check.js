@@ -4,19 +4,19 @@ var async = require('async'),
     fs = require('fs'),
     filingQueue = require('./import');
 
-var lookAhead = 100,
-    lookBehind = 100,
+var lookAhead = 50,
+    lookBehind = 200,
     interval = 3000;
 
 var temp_dir = path.resolve(__dirname + '/../../data/fec/downloaded');
 
 function checkForFiling(filing_id,cb) {
-    console.log('checking for ' + filing_id);
-
     var filePath = temp_dir + '/' + filing_id + '.fec';
 
     fs.exists(filePath,function (exists) {
         if (!exists) {
+            console.log('downloading ' + filing_id);
+
            request
                 .get('http://docquery.fec.gov/dcdev/posted/' + filing_id + '.fec')
                 .on('error', function(err) {
@@ -25,10 +25,12 @@ function checkForFiling(filing_id,cb) {
                     setTimeout(cb,interval);
                 })
                 .on('end',function () {
+                    console.log('downloaded ' + filing_id);
+
                     filingQueue.push({
-                        name: filing_id,
+                        name: filing_id + '',
                         openStream: function (cb) {
-                            fs.createReadStream(filePath, cb);
+                            cb(null,fs.createReadStream(filePath));
                         }
                     });
 
@@ -64,3 +66,5 @@ function queueFilingsToCheck() {
         q.drain = queueFilingsToCheck;
     });
 }
+
+queueFilingsToCheck();
