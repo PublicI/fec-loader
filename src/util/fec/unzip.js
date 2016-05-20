@@ -14,7 +14,8 @@ function unzipFile(file,cb) {
         filingQueue.drain = null;
 
         zipfile.on('entry', function(entry) {
-            if (entry.fileName.indexOf('.fec') !== -1) {
+            if (entry.fileName.indexOf('.fec') !== -1 &&
+                entry.fileName.indexOf('1047732.fec') == -1) {
 
                 filingQueue.push({
                     name: entry.fileName,
