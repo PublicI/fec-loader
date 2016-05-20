@@ -40,6 +40,9 @@ function checkForFiling(filing_id,cb) {
                     })
                     .pipe(fs.createWriteStream(filePath));
                 }
+                else {
+                    setTimeout(cb,interval);
+                }
             });
 
         }
