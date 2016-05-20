@@ -103,49 +103,53 @@ function writeSheet(x,name,rows) {
     sheet.end();
 }
 
-var x = xlsx();
-x.pipe(fs.createWriteStream(__dirname + '/../../data/fec/sheets/' + filing_id + '.xlsx'));
+module.exports = function (id) {
+    filing_id = id;
 
-async.waterfall([function (cb) {
-    getSummary(filing_id,'presidential',function (err,result) {
-        if (err) throw err;
+    var x = xlsx();
+    x.pipe(fs.createWriteStream(__dirname + '/../../data/fec/sheets/' + filing_id + '.xlsx'));
 
-        if (typeof result != 'undefined' && result) {
-            writeSheet(x,'summary',result);
-        }
+    async.waterfall([function (cb) {
+        getSummary(filing_id,'presidential',function (err,result) {
+            if (err) throw err;
 
-        cb();
+            if (typeof result != 'undefined' && result) {
+                writeSheet(x,'summary',result);
+            }
+
+            cb();
+        });
+    },function (cb) {
+        getSummary(filing_id,'pac',function (err,result) {
+            if (err) throw err;
+
+            if (typeof result != 'undefined' && result) {
+                writeSheet(x,'summary',result);
+            }
+
+            cb();
+        });
+    },function (cb) {
+        getTransactions(filing_id,'contribution',function (err,result) {
+            if (err) throw err;
+
+            if (typeof result != 'undefined' && result) {
+                writeSheet(x,'contributions',result);
+            }
+
+            cb();
+        });
+    },function (cb) {
+        getTransactions(filing_id,'expenditure',function (err,result) {
+            if (err) throw err;
+
+            if (typeof result != 'undefined' && result) {
+                writeSheet(x,'expenditures',result);
+            }
+
+            cb();
+        });
+    }],function () {
+        x.finalize();
     });
-},function (cb) {
-    getSummary(filing_id,'pac',function (err,result) {
-        if (err) throw err;
-
-        if (typeof result != 'undefined' && result) {
-            writeSheet(x,'summary',result);
-        }
-
-        cb();
-    });
-},function (cb) {
-    getTransactions(filing_id,'contribution',function (err,result) {
-        if (err) throw err;
-
-        if (typeof result != 'undefined' && result) {
-            writeSheet(x,'contributions',result);
-        }
-
-        cb();
-    });
-},function (cb) {
-    getTransactions(filing_id,'expenditure',function (err,result) {
-        if (err) throw err;
-
-        if (typeof result != 'undefined' && result) {
-            writeSheet(x,'expenditures',result);
-        }
-
-        cb();
-    });
-}],function () {
-    x.finalize();
-});
+};

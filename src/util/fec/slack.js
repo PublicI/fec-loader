@@ -1,7 +1,8 @@
 var Slack = require('slack-client'),
     fs = require('fs'),
     models = require('../../models'),
-    moment = require('moment');
+    moment = require('moment'),
+    sheet = require('./sheet');
 
 var committees = ['C00004036',
     'C00298000',
@@ -142,6 +143,8 @@ function checkForFilings (channel,type,first_run) {
             filing = filing.toJSON();
 
             if (!(filing.filing_id in filing_lookup) && !first_run && committees.indexOf(filing.filer_committee_id_number) !== -1) {
+                sheet(filing.filing_id);
+
                 console.log(filing.committee_name + ' (' + filing.filer_committee_id_number + ') filed a ' + filing.form_type);
                 channel.send('@channel ' + filing.committee_name + ' (' + filing.filer_committee_id_number + ') filed a ' + filing.form_type + ' http://docquery.fec.gov/cgi-bin/forms/' + filing.filer_committee_id_number + '/' + filing.filing_id + '/');
             }
