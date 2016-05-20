@@ -17,26 +17,31 @@ function checkForFiling(filing_id,cb) {
         if (!exists) {
             console.log('downloading ' + filing_id);
 
-           request
-                .get('http://docquery.fec.gov/dcdev/posted/' + filing_id + '.fec')
-                .on('error', function(err) {
-                    console.log(err);
+            var r = request.get('http://docquery.fec.gov/dcdev/posted/' + filing_id + '.fec');
 
-                    setTimeout(cb,interval);
-                })
-                .on('end',function () {
-                    console.log('downloaded ' + filing_id);
+            r.on('response', function (resp) {
+                if (resp.statusCode == 200) {
+                    r.on('error', function(err) {
+                        console.log(err);
 
-                    filingQueue.push({
-                        name: filing_id + '',
-                        openStream: function (cb) {
-                            cb(null,fs.createReadStream(filePath));
-                        }
-                    });
+                        setTimeout(cb,interval);
+                    })
+                    .on('end',function () {
+                        console.log('downloaded ' + filing_id);
 
-                    setTimeout(cb,interval);
-                })
-                .pipe(fs.createWriteStream(filePath));
+                        filingQueue.push({
+                            name: filing_id + '',
+                            openStream: function (cb) {
+                                cb(null,fs.createReadStream(filePath));
+                            }
+                        });
+
+                        setTimeout(cb,interval);
+                    })
+                    .pipe(fs.createWriteStream(filePath));
+                }
+            });
+
         }
         else {
             cb();
