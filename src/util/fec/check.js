@@ -4,9 +4,9 @@ var async = require('async'),
     fs = require('fs'),
     filingQueue = require('./import');
 
-var lookAhead = 50,
-    lookBehind = 200,
-    interval = 3000;
+var lookAhead = 25,
+    lookBehind = 100,
+    interval = 5000;
 
 var temp_dir = path.resolve(__dirname + '/../../data/fec/downloaded');
 
