@@ -146,7 +146,7 @@ function checkForFilings (channel,type,first_run) {
                 // sheet(filing.filing_id);
 
                 console.log(filing.committee_name + ' (' + filing.filer_committee_id_number + ') filed a ' + filing.form_type);
-                channel.send('@channel ' + filing.committee_name + ' (' + filing.filer_committee_id_number + ') filed a ' + filing.form_type + ' http://docquery.fec.gov/cgi-bin/forms/' + filing.filer_committee_id_number + '/' + filing.filing_id + '/');
+                channel.send(filing.committee_name + ' (' + filing.filer_committee_id_number + ') filed a ' + filing.form_type + ' for the period ending ' + filing.coverage_through_date  + ' http://docquery.fec.gov/cgi-bin/forms/' + filing.filer_committee_id_number + '/' + filing.filing_id + '/');
             }
 
             filing_lookup[filing.filing_id] = true;

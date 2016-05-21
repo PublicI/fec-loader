@@ -17,8 +17,7 @@ function checkForFiling(filing_id,cb) {
         if (!exists) {
             console.log('downloading ' + filing_id);
 
-            var r = request.get('http://docquery.fec.gov/dcdev/posted/' + filing_id + '.fec');
-
+            var r = request('http://docquery.fec.gov/dcdev/posted/' + filing_id + '.fec');
             r.on('response', function (resp) {
                 if (resp.statusCode == 200) {
                     r.on('error', function(err) {
@@ -44,7 +43,6 @@ function checkForFiling(filing_id,cb) {
                     setTimeout(cb,interval);
                 }
             });
-
         }
         else {
             cb();
