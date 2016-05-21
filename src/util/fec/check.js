@@ -6,7 +6,7 @@ var async = require('async'),
 
 var lookAhead = 25,
     lookBehind = 100,
-    interval = 5000;
+    interval = 10000;
 
 var temp_dir = path.resolve(__dirname + '/../../data/fec/downloaded');
 
