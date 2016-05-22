@@ -128,7 +128,7 @@ var filing_lookup = {};
 function checkForFilings (channel,type,first_run) {
     console.log('checking ' + (first_run ? 'first run' : 'not first run'));
     models['fec_' + type + '_summary'].findAll({
-        attributes: ['filing_id','committee_name','filer_committee_id_number','form_type'],
+        attributes: ['filing_id','committee_name','filer_committee_id_number','coverage_through_date','form_type'],
         logging: console.log,
         where: {
             created_date: {
@@ -146,8 +146,7 @@ function checkForFilings (channel,type,first_run) {
                 // sheet(filing.filing_id);
 
                 console.log(filing.committee_name + ' (' + filing.filer_committee_id_number + ') filed a ' + filing.form_type);
-                channel.send(filing.committee_name + ' (' + filing.filer_committee_id_number + ') filed a ' + filing.form_type + ' http://docquery.fec.gov/cgi-bin/forms/' + filing.filer_committee_id_number + '/' + filing.filing_id + '/');
-                // for the period ending ' + moment(filing.coverage_through_date).format('MM/DD/YYYY')  + '
+                channel.send(filing.committee_name + ' (' + filing.filer_committee_id_number + ') filed a ' + filing.form_type + ' for the period ending ' + moment(filing.coverage_through_date).format('M/D/YYYY')  + ' http://docquery.fec.gov/cgi-bin/forms/' + filing.filer_committee_id_number + '/' + filing.filing_id + '/');
             }
 
             filing_lookup[filing.filing_id] = true;
