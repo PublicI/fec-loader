@@ -19,7 +19,7 @@
     "readdir-recursive": "0.0.4",
     "request": "^2.72.0",
     "sequelize": "^3.23.2",
-    "slack-client": "^2.0.4",
+    "slack-client": "~1.5.1",
     "xlsx-stream": "^0.1.2",
     "yauzl": "^2.4.2"
   }
