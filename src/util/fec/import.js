@@ -11,8 +11,11 @@ var formModels = [
     models.fec_presidential_summary,
     models.fec_pac_summary,
     models.fec_group_summary,
+    models.fec_lobbyist_bundler,
     models.fec_contribution,
     models.fec_expenditure,
+    models.fec_debt,
+    models.fec_loan,
     models.fec_ie
 ];
 
