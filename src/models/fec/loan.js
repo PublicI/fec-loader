@@ -34,18 +34,7 @@ module.exports = function(sequelize, DataTypes) {
                 }
             }
         },
-        loan_due_date_terms: {
-            type: DataTypes.DATEONLY,
-            set: function(val) {
-                if (val && !(val instanceof Date) && val.match(/^[0-9]{8}$/)) {
-                    this.setDataValue('loan_due_date_terms', moment(val, 'YYYYMMDD').toDate());
-                } else if (val && !(val instanceof Date) && val.match(/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{2,4}$/)) {
-                    this.setDataValue('loan_due_date_terms', moment(val, 'MM/DD/YYYY').toDate());
-                } else {
-                    this.setDataValue('loan_due_date_terms', val);
-                }
-            }
-        },
+        loan_due_date_terms: DataTypes.STRING(255),
         loan_interest_rate_terms: DataTypes.DECIMAL(12, 2),
         secured: DataTypes.STRING(10),
         personal_funds: DataTypes.STRING(10),
