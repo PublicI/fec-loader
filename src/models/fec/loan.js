@@ -35,7 +35,7 @@ module.exports = function(sequelize, DataTypes) {
             }
         },
         loan_due_date_terms: DataTypes.STRING(255),
-        loan_interest_rate_terms: DataTypes.DECIMAL(12, 2),
+        loan_interest_rate_terms: DataTypes.STRING(255),
         secured: DataTypes.STRING(10),
         personal_funds: DataTypes.STRING(10),
         lender_committee_id_number: DataTypes.STRING(50),
