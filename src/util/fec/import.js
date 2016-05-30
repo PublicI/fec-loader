@@ -2,7 +2,8 @@ var models  = require('../../models'),
     async = require('async'),
     numeral = require('numeral'),
     parser = require('fec-parse'),
-    _ = require('lodash');
+    _ = require('lodash'),
+    brake = require('brake');
 
 var payload = 200; // how many rows get processed by cargo at a time
 
@@ -166,6 +167,7 @@ function importFiling(task,callback) {
             }
 
             stream
+                .pipe(brake(45164*4))
                 .pipe(parse)
                 .on('data',function (row) {
                     row.filing_id = filing_id;

@@ -9,6 +9,7 @@
   "dependencies": {
     "JSONStream": "^1.1.1",
     "async": "^2.0.0-rc.5",
+    "brake": "^1.0.1",
     "express": "^4.13.4",
     "fec-parse": "^0.2.1-beta.2",
     "ftp": "^0.3.10",
