@@ -167,7 +167,7 @@ function importFiling(task,callback) {
             }
 
             stream
-                .pipe(brake(45164*4))
+                .pipe(brake(45164*3))
                 .pipe(parse)
                 .on('data',function (row) {
                     row.filing_id = filing_id;
