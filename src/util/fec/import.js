@@ -33,6 +33,8 @@ function importFiling(task,callback) {
         if (!finished) {
             finished = true;
 
+            notify('importFailed',{ filing_id: filing_id });
+
             console.error(err);
 
             if (transaction !== null) {
@@ -57,6 +59,8 @@ function importFiling(task,callback) {
 
     function done() {
         console.log('inserted ' + processed + ' rows from ' + task.name);
+
+        notify('importComplete',{ filing_id: filing_id });
 
         if (processed == queued && !finished) {
             finished = true;
@@ -153,10 +157,25 @@ function importFiling(task,callback) {
         q.drain = cb;
     }
 
+    function notify(channel,data) {
+        if (models.sequelize.getDialect() == 'postgres') {
+            if (data.coverage_from_date) {
+                data = _.pick(data,[
+                    'filing_id',
+                    'form_type',
+                    'committee_name',
+                    'organization_name',
+                    'filer_committee_id_number',
+                    'coverage_from_date',
+                    'coverage_through_date']);
+            }
+
+            return models.sequelize.query('NOTIFY fec:' + channel + ', \'' + JSON.stringify(data) + '\';');
+        }
+    }
+
     function processFiling(openStream, cb) {
         console.log('== importing ' + filing_id + ' ==');
-
-        // var i = 0;
 
         var parse = parser();
 
@@ -178,22 +197,17 @@ function importFiling(task,callback) {
                     if (typeof row.model !== 'undefined' && !finished) {
                         queued++;
 
+                        if (queued == 2 && row.coverage_from_date) {
+                            notify('importStart',row);
+                        }
+
                         cargo.push(row,function (err) {
                             if (err) {
                                 error();
                             }
                         });
                     }
-/*
-                    if (i === 1 && (row.model_index !== null ||
-                        (row.form_type && row.form_type.match(/^(F24)/)))) {
-                        cargo.resume();
-                    }
-                    else if (i === 1) {
-                        cargo.kill();
-                    }*/
 
-                    // i++;
                 })
                 .on('end',function () {
                     cargo.drain = done;
