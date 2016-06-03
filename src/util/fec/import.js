@@ -58,17 +58,16 @@ function importFiling(task,callback) {
     }
 
     function done() {
-        console.log('inserted ' + processed + ' rows from ' + task.name);
-
-        notify('importComplete',{ filing_id: filing_id });
-
         if (processed == queued && !finished) {
             finished = true;
 
+            console.log('inserted ' + processed + ' rows from ' + task.name);
             console.log('commiting transaction');
 
             transaction.commit()
                 .then(function (result) {
+                    notify('importComplete',{ filing_id: filing_id });
+
                     callback(null,result);
                 })
                 .catch(error);
