@@ -7,12 +7,9 @@
     "start": "node src/util/sync"
   },
   "dependencies": {
-    "JSONStream": "^1.1.1",
     "async": "^2.0.0-rc.5",
     "brake": "^1.0.1",
-    "express": "^4.13.4",
-    "fec-parse": "^0.2.1-beta.2",
-    "ftp": "^0.3.10",
+    "fec-parse": "^0.3.0",
     "lodash": "^4.12.0",
     "moment": "^2.13.0",
     "numeral": "^1.5.3",
@@ -20,7 +17,6 @@
     "readdir-recursive": "0.0.4",
     "request": "^2.72.0",
     "sequelize": "^3.23.2",
-    "slack-client": "~1.5.1",
     "xlsx-stream": "^0.1.2",
     "yauzl": "^2.4.2"
   }
