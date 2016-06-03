@@ -169,7 +169,8 @@ function importFiling(task,callback) {
                     'coverage_through_date']);
             }
 
-            return models.sequelize.query('NOTIFY ' + channel + ', \'' + models.sequelize.escape(JSON.stringify(data)) + '\';');
+            return models.sequelize.query('NOTIFY ' + channel + ',  ' +
+                    models.sequelize.escape(JSON.stringify(data)) + ';');
         }
     }
 
