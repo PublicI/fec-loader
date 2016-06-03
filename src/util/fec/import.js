@@ -168,10 +168,10 @@ function importFiling(task,callback) {
                     'coverage_from_date',
                     'coverage_through_date']);
             }
-
-            console.log('NOTIFY fec:' + channel + ', \'' + models.sequelize.escape(JSON.stringify(data).replace(':','\\:')) + '\';');
-
-            return models.sequelize.query('NOTIFY fec:' + channel + ', \'' + models.sequelize.escape(JSON.stringify(data).replace(':','\\:')) + '\';');
+            
+            return models.sequelize.query('NOTIFY fec:' + channel + ', $json;',{
+                bind: { json: JSON.stringify(data) }
+            });
         }
     }
 
