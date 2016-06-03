@@ -169,7 +169,9 @@ function importFiling(task,callback) {
                     'coverage_through_date']);
             }
 
-            return models.sequelize.query('NOTIFY fec:' + channel + ', \'' + JSON.stringify(data) + '\';');
+            console.log('NOTIFY fec:' + channel + ', \'' + models.sequelize.escape(JSON.stringify(data).replace(':','\\:')) + '\';');
+
+            return models.sequelize.query('NOTIFY fec:' + channel + ', \'' + models.sequelize.escape(JSON.stringify(data).replace(':','\\:')) + '\';');
         }
     }
 
