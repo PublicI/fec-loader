@@ -33,7 +33,7 @@ function importFiling(task,callback) {
         if (!finished) {
             finished = true;
 
-            notify('importFailed',{ filing_id: filing_id });
+            notify('fecImportFailed',{ filing_id: filing_id });
 
             console.error(err);
 
@@ -66,7 +66,7 @@ function importFiling(task,callback) {
 
             transaction.commit()
                 .then(function (result) {
-                    notify('importComplete',{ filing_id: filing_id });
+                    notify('fecImportComplete',{ filing_id: filing_id });
 
                     callback(null,result);
                 })
@@ -169,9 +169,7 @@ function importFiling(task,callback) {
                     'coverage_through_date']);
             }
 
-            console.log('NOTIFY fec:' + channel + ', \'' + models.sequelize.escape(JSON.stringify(data).replace(':','\\:')) + '\';');
-
-            return models.sequelize.query('NOTIFY fec:' + channel + ', \'' + models.sequelize.escape(JSON.stringify(data).replace(':','\\:')) + '\';');
+            return models.sequelize.query('NOTIFY ' + channel + ', \'' + models.sequelize.escape(JSON.stringify(data)) + '\';');
         }
     }
 
@@ -199,7 +197,7 @@ function importFiling(task,callback) {
                         queued++;
 
                         if (queued == 2 && row.coverage_from_date) {
-                            notify('importStart',row);
+                            notify('fecImportStart',row);
                         }
 
                         cargo.push(row,function (err) {
