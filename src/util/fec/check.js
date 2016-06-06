@@ -15,7 +15,7 @@ function checkForFiling(filing_id,cb) {
 
     fs.exists(filePath,function (exists) {
         if (!exists) {
-            console.log('downloading ' + filing_id);
+            console.log('checking ' + filing_id);
 
             var r = request('http://docquery.fec.gov/dcdev/posted/' + filing_id + '.fec');
             r.on('response', function (resp) {
@@ -40,6 +40,7 @@ function checkForFiling(filing_id,cb) {
                     .pipe(fs.createWriteStream(filePath));
                 }
                 else {
+                    console.log('not found');
                     setTimeout(cb,interval);
                 }
             });
