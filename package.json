@@ -9,7 +9,7 @@
   "dependencies": {
     "async": "^2.0.0-rc.5",
     "brake": "^1.0.1",
-    "fec-parse": "^0.3.0",
+    "fec-parse": "^0.4.0",
     "lodash": "^4.12.0",
     "moment": "^2.13.0",
     "numeral": "^1.5.3",
