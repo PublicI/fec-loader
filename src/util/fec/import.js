@@ -166,7 +166,10 @@ function importFiling(task,callback) {
                     'organization_name',
                     'filer_committee_id_number',
                     'coverage_from_date',
-                    'coverage_through_date']);
+                    'coverage_through_date',
+                    'col_a_total_receipts',
+                    'col_a_total_disbursements',
+                    'col_a_cash_on_hand_close_of_period']);
             }
 
             return models.sequelize.query('NOTIFY ' + channel + ',  ' +
