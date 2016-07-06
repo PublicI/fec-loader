@@ -38,7 +38,6 @@ function checkForFiling(filing_id, cb) {
                             setTimeout(cb, interval);
                         })
                         .pipe(str)
-                        .pipe(fs.createWriteStream(filePath))
                         .on('end', function() {
                             console.log('downloaded ' + filing_id);
 
@@ -55,7 +54,8 @@ function checkForFiling(filing_id, cb) {
                             });
 
                             setTimeout(cb, interval);
-                        });
+                        })
+                        .pipe(fs.createWriteStream(filePath));
                 } else {
                     console.log('not found');
                     setTimeout(cb, interval);
