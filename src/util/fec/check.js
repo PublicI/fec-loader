@@ -41,9 +41,9 @@ function checkForFiling(filing_id, cb) {
                         .on('end', function() {
                             console.log('downloaded ' + filing_id);
 
-                            if (str.progress.transferred !== length) {
+                            if (str.progress().transferred !== length) {
                                 console.warn('expecting a file of size ' + length +
-                                    ' but downloaded file is ' + str.progress.transferred);
+                                    ' but downloaded file is ' + str.progress().transferred);
                             }
 
                             filingQueue.push({
