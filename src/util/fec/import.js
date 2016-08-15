@@ -197,12 +197,12 @@ function importFiling(task,callback) {
                         return model.match(row);
                     });
 
+                    if (row.coverage_from_date) {
+                        notify('fecImportStart',row);
+                    }
+
                     if (typeof row.model !== 'undefined' && !finished) {
                         queued++;
-
-                        if (queued == 2 && row.coverage_from_date) {
-                            notify('fecImportStart',row);
-                        }
 
                         cargo.push(row,function (err) {
                             if (err) {
