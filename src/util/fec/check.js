@@ -5,7 +5,7 @@ var async = require('async'),
     filingQueue = require('./import'),
     progress = require('progress-stream');
 
-var lookAhead = 50,
+var lookAhead = 100,
     lookBehind = 25,
     interval = 5000;
 

@@ -4,7 +4,7 @@
   "description": "Loads FEC data into a database",
   "license": "MIT",
   "dependencies": {
-    "async": "^2.0.0-rc.5",
+    "async": "^2.0.0",
     "brake": "^1.0.1",
     "fec-model": "github:chriszs/fec-model",
     "fec-parse": "^0.4.0",
