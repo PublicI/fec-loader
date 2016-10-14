@@ -6,6 +6,8 @@ var async = require('async'),
 var filings_dir = __dirname + '/../../data/fec/filings';
 
 function unzipFile(file,cb) {
+    console.log(file);
+
     yauzl.open(file, {
             autoClose: false
         }, function(err, zipfile) {
