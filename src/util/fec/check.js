@@ -5,9 +5,9 @@ var async = require('async'),
     filingQueue = require('./import'),
     progress = require('progress-stream');
 
-var lookAhead = 100,
+var lookAhead = 25,
     lookBehind = 25,
-    interval = 5000;
+    interval = 4000;
 
 var temp_dir = path.resolve(__dirname + '/../../data/fec/downloaded');
 
@@ -35,7 +35,7 @@ function checkForFiling(filing_id, cb) {
                     r.on('error', function(err) {
                             console.log(err);
 
-                            setTimeout(cb, interval);
+                            setTimeout(cb.bind(this,null,false), interval);
                         })
                         .pipe(str)
                         .on('end', function() {
@@ -53,21 +53,36 @@ function checkForFiling(filing_id, cb) {
                                 }
                             });
 
-                            setTimeout(cb, interval);
+                            setTimeout(cb.bind(this,null,true), interval);
                         })
                         .pipe(fs.createWriteStream(filePath));
                 } else {
                     console.log('not found');
-                    setTimeout(cb, interval);
+                    setTimeout(cb.bind(this,null,false), interval);
                 }
             });
         } else {
-            cb();
+            cb(null,false);
         }
     });
 }
 
-function queueFilingsToCheck() {
+function queueFilingsToCheck(err,results) {
+    // if no results found, look ahead further
+    if (typeof results !== 'undefined' && results && Array.isArray(results)) {
+        var found = results.filter(function (result) {
+            return result;
+        }).length;
+
+        if (found > 0) {
+            lookAhead = 25;
+        }
+        else {
+            lookAhead += 25;
+        }
+    }
+
+
     models.fec_filing.findAll({
             attributes: ['filing_id'],
             limit: lookBehind,
@@ -80,15 +95,15 @@ function queueFilingsToCheck() {
                 return filing.filing_id;
             });
 
-            var q = async.queue(checkForFiling, 1);
+            var tasks = [];
 
             for (var i = filings[filings.length - 1]; i <= filings[0] + lookAhead; i++) {
                 if (filings.indexOf(i) === -1) {
-                    q.push(i);
+                    tasks.push(i);
                 }
             }
 
-            q.drain = queueFilingsToCheck;
+            async.mapSeries(tasks, checkForFiling, queueFilingsToCheck);
         });
 }
 
