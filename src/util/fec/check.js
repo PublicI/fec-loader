@@ -5,7 +5,7 @@ var async = require('async'),
     filingQueue = require('./import'),
     progress = require('progress-stream');
 
-var lookAhead = 25,
+var lookAhead = 5,
     lookBehind = 100,
     interval = 4000;
 
@@ -75,10 +75,10 @@ function queueFilingsToCheck(err,results) {
         }).length;
 
         if (found > 0) {
-            lookAhead = 25;
+            lookAhead = 5;
         }
         else {
-            lookAhead += 25;
+            lookAhead += 5;
         }
     }
 
