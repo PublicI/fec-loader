@@ -3,7 +3,7 @@ var async = require('async'),
     filingQueue = require('./import'),
     yauzl = require('yauzl');
 
-var filings_dir = __dirname + '/../../data/fec/filings';
+var filings_dir = __dirname + '/../../data/fec/paper';
 
 function unzipFile(file,cb) {
     console.log(file);
@@ -38,19 +38,23 @@ function unzipFile(file,cb) {
     });
 }
 
-fs.readdir(filings_dir, function(err, files) {
-    var q = async.queue(unzipFile, 1);
+function init(filings_dir) {
+    fs.readdir(filings_dir, function(err, files) {
+        var q = async.queue(unzipFile, 1);
 
-    files.forEach(function (file) {
-        if (file.indexOf('.zip') === -1) {
-            return;
-        }
+        files.forEach(function (file) {
+            if (file.indexOf('.zip') === -1) {
+                return;
+            }
 
-        q.push(filings_dir + '/' + file);
+            q.push(filings_dir + '/' + file);
+        });
+
+        q.drain = function () {
+            console.log('done');
+        };
+
     });
+}
 
-    q.drain = function () {
-        console.log('done');
-    };
-
-});
+init(filings_dir);

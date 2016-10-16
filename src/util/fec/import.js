@@ -8,6 +8,9 @@ var models  = require('../../models'),
 var payload = 200; // how many rows get processed by cargo at a time
 
 var formModels = [
+    models.fec_paper_filing,
+    models.fec_paper_contribution,
+    models.fec_paper_expenditure,
     models.fec_filing,
     models.fec_presidential_summary,
     models.fec_pac_summary,
