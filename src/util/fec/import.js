@@ -158,19 +158,17 @@ function importFiling(task,callback) {
 
     function notify(channel,data) {
         if (models.sequelize.getDialect() == 'postgres') {
-            if (data.coverage_from_date) {
-                data = _.pick(data,[
-                    'filing_id',
-                    'form_type',
-                    'committee_name',
-                    'organization_name',
-                    'filer_committee_id_number',
-                    'coverage_from_date',
-                    'coverage_through_date',
-                    'col_a_total_receipts',
-                    'col_a_total_disbursements',
-                    'col_a_cash_on_hand_close_of_period']);
-            }
+            data = _.pick(data,[
+                'filing_id',
+                'form_type',
+                'committee_name',
+                'organization_name',
+                'filer_committee_id_number',
+                'coverage_from_date',
+                'coverage_through_date',
+                'col_a_total_receipts',
+                'col_a_total_disbursements',
+                'col_a_cash_on_hand_close_of_period']);
 
             return models.sequelize.query('NOTIFY ' + channel + ',  ' +
                     models.sequelize.escape(JSON.stringify(data)) + ';');
@@ -197,7 +195,9 @@ function importFiling(task,callback) {
                         return model.match(row);
                     });
 
-                    notify('fecImportStart',row);
+                    if (row.coverage_through_date) {
+                        notify('fecImportStart',row);
+                    }
 
                     if (typeof row.model !== 'undefined' && !finished) {
                         queued++;
