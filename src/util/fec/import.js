@@ -197,10 +197,7 @@ function importFiling(task,callback) {
                         return model.match(row);
                     });
 
-                    if (row.coverage_from_date &&
-                        row.col_a_cash_on_hand_close_of_period !== null) {
-                        notify('fecImportStart',row);
-                    }
+                    notify('fecImportStart',row);
 
                     if (typeof row.model !== 'undefined' && !finished) {
                         queued++;
