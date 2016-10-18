@@ -75,10 +75,10 @@ function queueFilingsToCheck(err,results) {
         }).length;
 
         if (found > 0) {
-            lookAhead = 5;
+            lookAhead = 10;
         }
         else {
-            lookAhead += 5;
+            lookAhead += 10;
         }
     }
 
