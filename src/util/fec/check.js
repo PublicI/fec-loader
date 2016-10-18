@@ -6,7 +6,7 @@ var async = require('async'),
     progress = require('progress-stream');
 
 var lookAhead = 5,
-    lookBehind = 100,
+    lookBehind = 50000,
     interval = 4000;
 
 var temp_dir = path.resolve(__dirname + '/../../data/fec/downloaded');
