@@ -85,7 +85,7 @@ function queueFilingsToCheck(err,results) {
 
     models.fec_filing.findAll({
             attributes: ['filing_id'],
-            limit: 1,// lookBehind,
+            limit: lookBehind,
             order: [
                 ['filing_id', 'DESC']
             ]
