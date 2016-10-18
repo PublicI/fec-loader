@@ -5,7 +5,7 @@ var async = require('async'),
     filingQueue = require('./import'),
     progress = require('progress-stream');
 
-var lookAhead = 5,
+var lookAhead = 10,
     lookBehind = 100,
     interval = 4000;
 
@@ -85,7 +85,7 @@ function queueFilingsToCheck(err,results) {
 
     models.fec_filing.findAll({
             attributes: ['filing_id'],
-            limit: lookBehind,
+            limit: 1,// lookBehind,
             order: [
                 ['filing_id', 'DESC']
             ]
@@ -97,7 +97,7 @@ function queueFilingsToCheck(err,results) {
 
             var tasks = [];
 
-            for (var i = filings[filings.length - 1]; i <= filings[0] + lookAhead; i++) {
+            for (var i = filings[0]-lookBehind; i <= filings[0] + lookAhead; i++) {
                 if (filings.indexOf(i) === -1) {
                     tasks.push(i);
                 }
