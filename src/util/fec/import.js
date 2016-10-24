@@ -198,7 +198,7 @@ function importFiling(task,callback) {
                         return model.match(row);
                     });
 
-                    if (row.coverage_through_date) {
+                    if (row.committee_name && row.form_type && row.filer_committee_id_number) {
                         notify('fecImportStart',row);
                     }
 
