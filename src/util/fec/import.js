@@ -198,7 +198,8 @@ function importFiling(task,callback) {
                         return model.match(row);
                     });
 
-                    if (row.committee_name && row.form_type && row.filer_committee_id_number) {
+                    if (row.committee_name && row.form_type && row.filer_committee_id_number &&
+                        row.form_type.slice(0,3) != 'F24') {
                         notify('fecImportStart',row);
                     }
 
