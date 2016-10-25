@@ -1,17 +1,12 @@
-var async = require('async'),
-    request = require('request'),
-    models = require('../../models'),
+var request = require('request'),
     fs = require('fs'),
     filingQueue = require('./import'),
     progress = require('progress-stream');
 
-var lookAhead = 10,
-    lookBehind = 100,
-    interval = 4000;
-
 var temp_dir = path.resolve(__dirname + '/../../data/fec/downloaded');
+var interval = 6000;
 
-function checkForFiling(filing_id, cb) {
+module.exports = function (filing_id, cb) {
     var filePath = temp_dir + '/' + filing_id + '.fec';
 
     fs.exists(filePath, function(exists) {
@@ -65,46 +60,4 @@ function checkForFiling(filing_id, cb) {
             cb(null,false);
         }
     });
-}
-
-function queueFilingsToCheck(err,results) {
-    // if no results found, look ahead further
-    if (typeof results !== 'undefined' && results && Array.isArray(results)) {
-        var found = results.filter(function (result) {
-            return result;
-        }).length;
-
-        if (found > 0) {
-            lookAhead = 10;
-        }
-        else {
-            lookAhead += 10;
-        }
-    }
-
-
-    models.fec_filing.findAll({
-            attributes: ['filing_id'],
-            limit: lookBehind,
-            order: [
-                ['filing_id', 'DESC']
-            ]
-        })
-        .then(function(filings) {
-            filings = filings.map(function(filing) {
-                return filing.filing_id;
-            });
-
-            var tasks = [];
-
-            for (var i = filings[0]-lookBehind; i <= filings[0] + lookAhead; i++) {
-                if (filings.indexOf(i) === -1) {
-                    tasks.push(i);
-                }
-            }
-
-            async.mapSeries(tasks, checkForFiling, queueFilingsToCheck);
-        });
-}
-
-queueFilingsToCheck();
+};

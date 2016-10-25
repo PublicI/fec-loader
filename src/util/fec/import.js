@@ -5,7 +5,7 @@ var models  = require('../../models'),
     _ = require('lodash'),
     brake = require('brake');
 
-var payload = 200; // how many rows get processed by cargo at a time
+var payload = 400; // how many rows get processed by cargo at a time
 
 var formModels = [
     models.fec_paper_filing,
@@ -146,7 +146,7 @@ function importFiling(task,callback) {
                     })
                     .value();
 
-        var q = async.queue(processRows,1);
+        var q = async.queue(processRows,2);
 
         q.push(modelGroups,function (err) {
             if (err) {
@@ -190,7 +190,7 @@ function importFiling(task,callback) {
             }
 
             stream
-                .pipe(brake(45164*3))
+                .pipe(brake(45164*4))
                 .pipe(parse)
                 .on('data',function (row) {
                     row.filing_id = filing_id;
