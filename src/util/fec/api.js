@@ -42,8 +42,20 @@ function queueFilingsToCheck() {
                             setTimeout(queueFilingsToCheck,interval);
                         });
                     }
+                    else {
+                        console.error('no data or results');
+
+                        setTimeout(queueFilingsToCheck,interval);
+                    }
                 }
                 else {
+                    if (error) {
+                        console.error(error);
+                    }
+                    else {
+                        console.error('got ' + response.statusCode + ' response code');
+                    }
+
                     console.log('waiting');
                     setTimeout(queueFilingsToCheck,interval);
                 }
