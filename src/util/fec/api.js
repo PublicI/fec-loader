@@ -23,7 +23,7 @@ function queueFilingsToCheck() {
 
             request('https://api.open.fec.gov/v1/efile/filings/?sort=-receipt_date&per_page=' +
                     lookBehind + '&api_key=' + process.env.FEC_KEY +
-                    '&page=1', function (error, response, body) {
+                    '&page=1&cache=' + Math.round(Math.random()*100), function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
 
@@ -32,7 +32,7 @@ function queueFilingsToCheck() {
                         var tasks = [];
 
                         data.results.forEach(function (filing) {
-                            console.log(filing.file_number,filings.indexOf(filing.file_number));
+                            // console.log(filing.file_number,filings.indexOf(filing.file_number));
                             if (filings.indexOf(filing.file_number) === -1) {
                                 tasks.push(filing.file_number);
                             }
