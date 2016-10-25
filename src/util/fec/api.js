@@ -32,12 +32,11 @@ function queueFilingsToCheck() {
                         var tasks = [];
 
                         data.results.forEach(function (filing) {
+                            console.log(filing.file_number,filings.indexOf(filing.file_number));
                             if (filings.indexOf(filing.file_number) === -1) {
                                 tasks.push(filing.file_number);
                             }
                         });
-
-                        console.log(tasks);
 
                         async.mapSeries(tasks, checkForFiling, function () {
                             console.log('waiting');
