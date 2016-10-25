@@ -29,6 +29,8 @@ function queueFilingsToCheck() {
 
                     if (data && data.results) {
 
+                        console.log(data.results);
+
                         var tasks = [];
 
                         data.results.forEach(function (filing) {
@@ -36,6 +38,8 @@ function queueFilingsToCheck() {
                                 tasks.push(filing.file_number);
                             }
                         });
+
+                        console.log(tasks);
 
                         async.mapSeries(tasks, checkForFiling, function () {
                             console.log('waiting');
