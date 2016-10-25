@@ -4,7 +4,7 @@ var async = require('async'),
     models = require('../../models');
 
 var lookAhead = 10,
-    lookBehind = 100;
+    lookBehind = 1000;
 
 function queueFilingsToCheck(err,results) {
     // if no results found, look ahead further

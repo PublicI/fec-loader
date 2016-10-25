@@ -4,7 +4,7 @@ var request = require('request'),
     progress = require('progress-stream');
 
 var temp_dir = path.resolve(__dirname + '/../../data/fec/downloaded');
-var interval = 6000;
+var interval = 10000;
 
 module.exports = function (filing_id, cb) {
     var filePath = temp_dir + '/' + filing_id + '.fec';
