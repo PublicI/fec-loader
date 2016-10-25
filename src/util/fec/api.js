@@ -29,8 +29,6 @@ function queueFilingsToCheck() {
 
                     if (data && data.results) {
 
-                        console.log(data.results);
-
                         var tasks = [];
 
                         data.results.forEach(function (filing) {
