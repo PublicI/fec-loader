@@ -1,67 +1,49 @@
-var async = require('async'),
+var _ = require('lodash'),
+    async = require('async'),
     checkForFiling = require('./check'),
     request = require('request'),
     models = require('../../models'),
-    FeedParser = require('feedparser');
+    parser = require('rss-parser');
 
-var lookBehind = 100,
-    interval = 60000;
+var interval = 60000;
 
 function queueFilingsToCheck() {
     console.log('checking RSS');
 
-    models.fec_filing.findAll({
-            attributes: ['filing_id'],
-            limit: lookBehind,
-            order: [
-                ['filing_id', 'DESC']
-            ]
-        })
-        .then(function(filings) {
-            filings = filings.map(function(filing) {
-                return filing.filing_id;
+
+    parser.parseURL('http://efilingapps.fec.gov/rss/generate?preDefinedFilingType=ALL', function(err, parsed) {
+        if (!err && parsed && parsed.feed && parsed.feed.entries) {
+            var newFilings = parsed.feed.entries.map(function (filing) {
+                return parseInt(filing.link.replace('http://docquery.fec.gov/dcdev/posted/','').replace('.fec',''));
             });
 
-            request('http://efilingapps.fec.gov/rss/generate?preDefinedFilingType=ALL')
-                .on('error', function(error) {
-                    console.error(error);
+            models.fec_filing.findAll({
+                    attributes: ['filing_id'],
+                    limit: _.min(newFilings),
+                    order: [
+                        ['filing_id', 'DESC']
+                    ]
                 })
-                .on('response', function(res) {
-                    var stream = this;
+                .then(function(filings) {
+                    filings = filings.map(function(filing) {
+                        return filing.filing_id;
+                    });
 
-                    if (res.statusCode != 200) return this.emit('error', new Error('Bad status code'));
+                    async.mapSeries(_.difference(newFilings,filings), checkForFiling, function () {
+                        console.log('waiting');
+                        setTimeout(queueFilingsToCheck,interval);
+                    });
 
-                    var feedparser = new FeedParser();
-
-                    stream.pipe(feedparser);
-
-                    feedparser
-                        .on('error', function(error) {
-                            console.error(error);
-                        })
-                        .on('readable', function() {
-                            var stream = this,
-                                item,
-                                tasks = [];
-
-                            while (item = stream.read()) {
-                                var id = parseInt(item.link.replace('http://docquery.fec.gov/dcdev/posted/','').replace('.fec',''));
-
-                                if (filings.indexOf(id) === -1) {
-                                    tasks.push(id);
-                                }
-                            }
-
-                            console.log(tasks)
-/*
-                            async.mapSeries(tasks, checkForFiling, function() {
-                                console.log('waiting');
-                                setTimeout(queueFilingsToCheck, interval);
-                            });*/
-                        });
                 });
 
-        });
+        }
+        else {
+            console.error(error);
+
+            console.log('waiting');
+            setTimeout(queueFilingsToCheck,interval);
+        }
+    });
 }
 
 queueFilingsToCheck();
