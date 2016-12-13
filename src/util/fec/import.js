@@ -190,8 +190,27 @@ function importFiling(task,callback) {
             }
 
             stream
-                .pipe(brake(45164*4))
+                // .pipe(brake(45164*4))
                 .pipe(parse)
+                .pipe(through2.obj(function (row, enc, callback) {
+                    row.filing_id = filing_id;
+                    row.model = formModels.find(function (model) {
+                        return model.match(row);
+                    });
+
+                    if (row.committee_name && row.form_type && row.filer_committee_id_number &&
+                        row.form_type.slice(0,3) != 'F24') {
+                        notify('fecImportStart',row);
+                    }
+
+                    if (typeof row.model !== 'undefined' && !finished) {
+                        queued++;
+                        
+                        this.push(row);
+                    }
+
+                    callback();
+                })
                 .on('data',function (row) {
                     row.filing_id = filing_id;
                     row.model = formModels.find(function (model) {
