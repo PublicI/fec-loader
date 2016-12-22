@@ -17,7 +17,7 @@ function init(filings_dir) {
             filingQueue.push({
                 name: file,
                 openStream: function (cb) {
-                    fs.createReadStream(filings_dir + '/' + file, cb);
+                    cb(null,fs.createReadStream(filings_dir + '/' + file));
                 }
             });
         });
