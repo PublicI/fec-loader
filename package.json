@@ -5,16 +5,15 @@
   "license": "MIT",
   "dependencies": {
     "async": "^2.0.0",
-    "brake": "^1.0.1",
     "fec-model": "github:chriszs/fec-model",
     "fec-parse": "^0.6.0",
+    "highland": "^2.10.1",
     "lodash": "^4.12.0",
     "numeral": "^1.5.3",
     "pg": "^4.5.5",
     "progress-stream": "^1.2.0",
     "request": "^2.72.0",
     "rss-parser": "^2.5.2",
-    "through2": "^2.0.3",
     "yauzl": "^2.4.2"
   },
   "main": "./src/app"

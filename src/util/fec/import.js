@@ -3,9 +3,9 @@ var models  = require('../../models'),
     numeral = require('numeral'),
     parser = require('fec-parse'),
     _ = require('lodash'),
-    brake = require('brake');
+    highland = require('highland');
 
-var payload = 400; // how many rows get processed by cargo at a time
+var payload = 1000; // how many rows get processed at a time
 
 var formModels = [
     models.fec_paper_filing,
@@ -27,60 +27,49 @@ function importFiling(task,callback) {
     var transaction = null;
 
     var processed = 0,
-        queued = 0,
-        finished = false;
+        finished = false,
+        start = process.hrtime();
 
     function error(err) {
-        cargo.kill();
+        if (finished) {
+            callback(err);
+            return;
+        }
+        finished = true;
 
-        if (!finished) {
-            finished = true;
+        notify('fecImportFailed',{ filing_id: filing_id });
 
-            notify('fecImportFailed',{ filing_id: filing_id });
+        console.error(err);
 
-            console.error(err);
+        if (transaction !== null) {
+            console.error('rolling back transaction');
 
-            if (transaction !== null) {
-                console.error('rolling back transaction');
+            transaction.rollback()
+                .then(callback.bind(this,err))
+                .catch(function () {
+                    console.error('error rolling back transaction');
 
-                transaction.rollback()
-                    .then(callback.bind(this,err))
-                    .catch(function () {
-                        console.error('error rolling back transaction');
-
-                        callback(err);
-                    });
-            }
-            else {
-                callback(err);
-            }
+                    callback(err);
+                });
         }
         else {
-            throw new Error('error called for ' + filing_id + ', but already finished');
+            callback(err);
         }
     }
 
     function done() {
-        if (processed == queued && !finished) {
-            finished = true;
+        finished = true;
 
-            console.log('inserted ' + processed + ' rows from ' + task.name);
-            console.log('commiting transaction');
+        console.log('inserted ' + processed + ' rows from ' + task.name);
+        console.log('commiting transaction');
 
-            transaction.commit()
-                .then(function (result) {
-                    notify('fecImportComplete',{ filing_id: filing_id });
+        transaction.commit()
+            .then(function (result) {
+                notify('fecImportComplete',{ filing_id: filing_id });
 
-                    callback(null,result);
-                })
-                .catch(error);
-        }
-        else if (finished) {
-            throw new Error('done called for ' + filing_id + ', but already finished');
-        }
-        else if (processed !== queued) {
-            throw new Error('done called for ' + filing_id + ', but processed is ' + processed + ' and queued is ' + queued);
-        }
+                callback(null,result);
+            })
+            .catch(error);
     }
 
     function startTransaction(cb) {
@@ -104,7 +93,6 @@ function importFiling(task,callback) {
             rows[0].report_number = null;
         }
 
-        console.log('processing ' + numeral(processed).format() + ' - ' + numeral(processed+task.rows.length).format() + ' of ' + numeral(queued).format());
 
         rows[0].model
             .bulkCreate(rows,{
@@ -112,6 +100,11 @@ function importFiling(task,callback) {
             })
             .then(function () {
                 processed += task.rows.length;
+
+                var elapsed = process.hrtime(start)[0];
+                
+                console.log('processed ' + numeral(processed).format() + ' records in ' +
+                        elapsed + ' seconds at ' + Math.round(processed/elapsed) + ' rows/second');
 
                 cb();
             })
@@ -178,6 +171,34 @@ function importFiling(task,callback) {
         }
     }
 
+    function processBatch (err, rows, push, next) {
+        if (err) {
+            push(err);
+            next();
+        }
+        else {
+            queueRows(rows,function () {
+                push(null,rows);
+                next();
+            });
+        }
+    }
+
+    function processRow(row) {
+        row.filing_id = filing_id;
+
+        row.model = formModels.find(function (model) {
+            return model.match(row);
+        });
+
+        if (row.committee_name && row.form_type && row.filer_committee_id_number &&
+            row.form_type.slice(0,3) != 'F24') {
+            notify('fecImportStart',row);
+        }
+
+        return row;
+    }
+
     function processFiling(openStream, cb) {
         console.log('== importing ' + filing_id + ' ==');
 
@@ -190,57 +211,17 @@ function importFiling(task,callback) {
             }
 
             stream
-                // .pipe(brake(45164*4))
                 .pipe(parse)
-                .pipe(through2.obj(function (row, enc, callback) {
-                    row.filing_id = filing_id;
-                    row.model = formModels.find(function (model) {
-                        return model.match(row);
-                    });
-
-                    if (row.committee_name && row.form_type && row.filer_committee_id_number &&
-                        row.form_type.slice(0,3) != 'F24') {
-                        notify('fecImportStart',row);
-                    }
-
-                    if (typeof row.model !== 'undefined' && !finished) {
-                        queued++;
-                        
-                        this.push(row);
-                    }
-
-                    callback();
-                })
-                .on('data',function (row) {
-                    row.filing_id = filing_id;
-                    row.model = formModels.find(function (model) {
-                        return model.match(row);
-                    });
-
-                    if (row.committee_name && row.form_type && row.filer_committee_id_number &&
-                        row.form_type.slice(0,3) != 'F24') {
-                        notify('fecImportStart',row);
-                    }
-
-                    if (typeof row.model !== 'undefined' && !finished) {
-                        queued++;
-
-                        cargo.push(row,function (err) {
-                            if (err) {
-                                error();
-                            }
-                        });
-                    }
-
-                })
-                .on('end',function () {
-                    cargo.drain = done;
-
-                    if (processed === queued) {
-                        done();
-                    }
-                })
-                .on('error',error);
+                .pipe(highland.pipeline(function (s) {
+                    return s.map(processRow)
+                        .filter(function (row) {
+                            return typeof row.model !== 'undefined';
+                        })
+                        .batchWithTimeOrCount(5, payload)
+                        .consume(processBatch)
+                        .stopOnError(error)
+                        .done(done);
+                }));
         });
     }
 
@@ -260,8 +241,6 @@ function importFiling(task,callback) {
     }
 
     var filing_id = task.name.replace(/[^0-9]+/g,''); // assume the filing number is just the numeric portion of the file name
-
-    var cargo = async.cargo(queueRows,payload);
 
     checkForFiling(filing_id,function () {
         startTransaction(function (t) {
