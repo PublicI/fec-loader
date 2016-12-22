@@ -60,8 +60,8 @@ function importFiling(task,callback) {
     function done() {
         finished = true;
 
-        console.log('inserted ' + numeral(processed).format() + ' rows from ' + task.name);
-        console.log('commiting transaction');
+        console.info('inserted ' + numeral(processed).format() + ' rows from ' + task.name);
+        console.info('committing transaction');
 
         transaction.commit()
             .then(function (result) {
@@ -78,13 +78,11 @@ function importFiling(task,callback) {
                 .catch(error);
     }
 
-    function processRows(task,cb) {
+    function processRows(rows,cb) {
         if (finished) {
             cb();
             return;
         }
-
-        rows = task.rows;
 
         if (rows[0].report_id === '') {
             rows[0].report_id = null;
@@ -93,63 +91,31 @@ function importFiling(task,callback) {
             rows[0].report_number = null;
         }
 
-
         rows[0].model
             .bulkCreate(rows,{
                 transaction: transaction
             })
             .then(function () {
-                processed += task.rows.length;
+                processed += rows.length;
 
                 var elapsed = process.hrtime(start)[0];
                 
-                console.log('processed ' + numeral(processed).format() + ' records in ' +
+                console.info('processed ' + numeral(processed).format() + ' records in ' +
                         elapsed + ' seconds at ' + Math.round(processed/elapsed) + ' rows/second');
 
                 cb();
             })
             .catch(function (err) {
                 if (err.name == 'SequelizeUniqueConstraintError') {
-                    console.log('already inserted ' + rows[0].filing_id);
+                    console.error('already inserted ' + rows[0].filing_id);
                 }
                 else {
                     console.error('error inserting ' + rows[0].filing_id + ':');
-                    console.log(err);
+                    console.error(err);
                 }
 
                 cb(err);
             });
-    }
-
-    function queueRows(rows,cb) {
-        if (finished) {
-            cb();
-            return;
-        }
-
-        var modelGroups = _(rows)
-                    .groupBy(function (row) {
-                        return row.model.name;
-                    })
-                    .toArray()
-                    .map(function (rows) {
-                        return {
-                            rows: rows
-                        };
-                    })
-                    .value();
-
-        var q = async.queue(processRows,2);
-
-        q.push(modelGroups,function (err) {
-            if (err) {
-                q.kill();
-
-                cb(err);
-            }
-        });
-
-        q.drain = cb;
     }
 
     function notify(channel,data) {
@@ -171,22 +137,6 @@ function importFiling(task,callback) {
         }
     }
 
-    function processBatch (err, rows, push, next) {
-        if (err) {
-            push(err);
-            next();
-        }
-        else if (rows === highland.nil) {
-            push(null,rows);
-        }
-        else {
-            queueRows(rows,function () {
-                push(null,rows);
-                next();
-            });
-        }
-    }
-
     function processRow(row) {
         row.filing_id = filing_id;
 
@@ -203,7 +153,7 @@ function importFiling(task,callback) {
     }
 
     function processFiling(openStream, cb) {
-        console.log('== importing ' + filing_id + ' ==');
+        console.info('== importing ' + filing_id + ' ==');
 
         openStream(function (err,stream) {
             if (err) {
@@ -219,7 +169,15 @@ function importFiling(task,callback) {
                             return typeof row.model !== 'undefined';
                         })
                         .batchWithTimeOrCount(5, payload)
-                        .consume(processBatch)
+                        .flatMap(function (rows) {
+                            return highland(rows)
+                                    .group(function (row) {
+                                        return row.model.name;
+                                    });
+                        })
+                        .flatMap(highland.values)
+                        .map(highland.wrapCallback(processRows))
+                        .parallel(2)
                         .stopOnError(error)
                         .done(done);
                 }));
@@ -230,8 +188,6 @@ function importFiling(task,callback) {
         models.fec_filing.findById(id)
             .then(function (result) {
                 if (result) {
-                    //console.log('already inserted ' + filing_id);
-
                     callback();
                 }
                 else {
