@@ -1,9 +1,10 @@
-var models  = require('../models'),
+var _ = require('lodash'),
     async = require('async'),
+    chalk = require('chalk'),
+    highland = require('highland'),
+    models  = require('../models'),
     numeral = require('numeral'),
-    parser = require('fec-parse'),
-    _ = require('lodash'),
-    highland = require('highland');
+    parser = require('fec-parse');
 
 var payload = 1000; // how many rows get processed at a time
 
@@ -39,15 +40,15 @@ function importFiling(task,callback) {
 
         notify('fecImportFailed',{ filing_id: filing_id });
 
-        console.error(err);
+        console.error(chalk.red(err));
 
         if (transaction !== null) {
-            console.error('rolling back transaction');
+            console.error(chalk.red('rolling back transaction'));
 
             transaction.rollback()
                 .then(callback.bind(this,err))
                 .catch(function () {
-                    console.error('error rolling back transaction');
+                    console.error(chalk.red('error rolling back transaction'));
 
                     callback(err);
                 });
@@ -60,8 +61,7 @@ function importFiling(task,callback) {
     function done() {
         finished = true;
 
-        console.info('inserted ' + numeral(processed).format() + ' rows from ' + task.name);
-        console.info('committing transaction');
+        console.info(chalk.green('inserted ' + numeral(processed).format() + ' rows from ' + filing_id));
 
         transaction.commit()
             .then(function (result) {
@@ -93,25 +93,29 @@ function importFiling(task,callback) {
 
         rows[0].model
             .bulkCreate(rows,{
-                transaction: transaction
+                transaction: transaction,
+                validate: true
             })
             .then(function () {
                 processed += rows.length;
 
-                var elapsed = process.hrtime(start)[0];
+                var elapsed = process.hrtime(start);
+                elapsed = elapsed[0] + (elapsed[1] / 1000000000);
                 
-                console.info('processed ' + numeral(processed).format() + ' records in ' +
-                        elapsed + ' seconds at ' + Math.round(processed/elapsed) + ' rows/second');
+                console.info(chalk.gray('processed ' +
+                        numeral(processed).format() + ' records in ' +
+                        numeral(elapsed).format('0.00') + ' seconds at ' +
+                        numeral(processed/elapsed).format() + ' rows/second'));
 
                 cb();
             })
             .catch(function (err) {
                 if (err.name == 'SequelizeUniqueConstraintError') {
-                    console.error('already inserted ' + rows[0].filing_id);
+                    console.error(chalk.red('already inserted ' + rows[0].filing_id));
                 }
                 else {
-                    console.error('error inserting ' + rows[0].filing_id + ':');
-                    console.error(err);
+                    console.error(chalk.red('error inserting ' + rows[0].filing_id + ':'));
+                    console.error(chalk.red(err));
                 }
 
                 cb(err);
