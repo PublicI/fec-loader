@@ -60,7 +60,7 @@ function importFiling(task,callback) {
     function done() {
         finished = true;
 
-        console.log('inserted ' + processed + ' rows from ' + task.name);
+        console.log('inserted ' + numeral(processed).format() + ' rows from ' + task.name);
         console.log('commiting transaction');
 
         transaction.commit()
@@ -176,6 +176,9 @@ function importFiling(task,callback) {
             push(err);
             next();
         }
+        else if (rows === highland.nil) {
+            push(null,rows);
+        }
         else {
             queueRows(rows,function () {
                 push(null,rows);
@@ -202,8 +205,6 @@ function importFiling(task,callback) {
     function processFiling(openStream, cb) {
         console.log('== importing ' + filing_id + ' ==');
 
-        var parse = parser();
-
         openStream(function (err,stream) {
             if (err) {
                 error(err);
@@ -211,7 +212,7 @@ function importFiling(task,callback) {
             }
 
             stream
-                .pipe(parse)
+                .pipe(parser())
                 .pipe(highland.pipeline(function (s) {
                     return s.map(processRow)
                         .filter(function (row) {
