@@ -3,7 +3,7 @@ var async = require('async'),
     filingQueue = require('./import'),
     yauzl = require('yauzl');
 
-var filings_dir = __dirname + '/../../data/fec/filings';
+var filings_dir = __dirname + '/../data/filings';
 
 function unzipFile(file,cb) {
     console.log(file);

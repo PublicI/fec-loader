@@ -1,7 +1,7 @@
 var fs = require('fs'),
     filingQueue = require('./import');
 
-var filings_dir = __dirname + '/../../data/fec/downloaded';
+var filings_dir = __dirname + '/../data/downloaded';
 
 function init(filings_dir) {
     fs.readdir(filings_dir, function(err, files) {

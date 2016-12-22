@@ -3,7 +3,7 @@ var request = require('request'),
     filingQueue = require('./import'),
     progress = require('progress-stream');
 
-var temp_dir = path.resolve(__dirname + '/../../data/fec/downloaded');
+var temp_dir = path.resolve(__dirname + '/../data/downloaded');
 var interval = 10000;
 
 module.exports = function (filing_id, cb) {

@@ -2,7 +2,7 @@ var _ = require('lodash'),
     async = require('async'),
     checkForFiling = require('./check'),
     request = require('request'),
-    models = require('../../models'),
+    models = require('../models'),
     parser = require('rss-parser');
 
 var interval = 60000;

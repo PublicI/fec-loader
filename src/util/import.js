@@ -1,4 +1,4 @@
-var models  = require('../../models'),
+var models  = require('../models'),
     async = require('async'),
     numeral = require('numeral'),
     parser = require('fec-parse'),

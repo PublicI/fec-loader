@@ -1,7 +1,7 @@
 var async = require('async'),
     checkForFiling = require('./check'),
     request = require('request'),
-    models = require('../../models');
+    models = require('../models');
 
 var lookAhead = 10,
     lookBehind = 1000;
