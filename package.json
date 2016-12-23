@@ -15,6 +15,7 @@
     "progress-stream": "^1.2.0",
     "request": "^2.72.0",
     "rss-parser": "^2.5.2",
+    "tables": "^0.0.5",
     "yauzl": "^2.4.2"
   },
   "main": "./src/app"
