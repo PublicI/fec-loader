@@ -19,5 +19,5 @@
     "tables": "^0.0.5",
     "yauzl": "^2.4.2"
   },
-  "main": "./src/index"
+  "main": "./index"
 }

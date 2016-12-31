@@ -1,4 +1,4 @@
 node_modules
-src/data/**/*.fec
-src/data/**/*.zip
-src/bin/*.sh
+data/**/*.fec
+data/**/*.zip
+bin/*.sh
