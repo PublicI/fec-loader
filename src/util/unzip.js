@@ -1,9 +1,8 @@
-var async = require('async'),
-    fs = require('fs'),
+var _ = require('lodash'),
+    async = require('async'),
     filingQueue = require('./import'),
+    fs = require('fs'),
     yauzl = require('yauzl');
-
-var filings_dir = __dirname + '/../data/filings';
 
 function unzipFile(file,cb) {
     console.log(file);
@@ -38,8 +37,8 @@ function unzipFile(file,cb) {
     });
 }
 
-function init(filings_dir) {
-    fs.readdir(filings_dir, function(err, files) {
+function init(opts) {
+    fs.readdir(opts.dir, function(err, files) {
         var q = async.queue(unzipFile, 1);
 
         files.forEach(function (file) {
@@ -47,7 +46,7 @@ function init(filings_dir) {
                 return;
             }
 
-            q.push(filings_dir + '/' + file);
+            q.push(opts.dir + '/' + file);
         });
 
         q.drain = function () {
@@ -57,4 +56,14 @@ function init(filings_dir) {
     });
 }
 
-init(filings_dir);
+module.exports = function (opts) {
+    opts = _.defaults(opts,{
+        dir: __dirname + '/../data/filings'
+    });
+
+    init(opts);
+};
+
+if (require.main === module) {
+    module.exports();
+}

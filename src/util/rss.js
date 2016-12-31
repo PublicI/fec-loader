@@ -1,15 +1,12 @@
 var _ = require('lodash'),
     async = require('async'),
     checkForFiling = require('./check'),
-    request = require('request'),
     models = require('../models'),
-    parser = require('rss-parser');
+    parser = require('rss-parser'),
+    request = require('request');
 
-var interval = 60000;
-
-function queueFilingsToCheck() {
+function queueFilingsToCheck(opts) {
     console.log('checking RSS');
-
 
     parser.parseURL('http://efilingapps.fec.gov/rss/generate?preDefinedFilingType=ALL', function(err, parsed) {
         if (!err && parsed && parsed.feed && parsed.feed.entries) {
@@ -31,7 +28,7 @@ function queueFilingsToCheck() {
 
                     async.mapSeries(_.difference(newFilings,filings), checkForFiling, function () {
                         console.log('waiting');
-                        setTimeout(queueFilingsToCheck,interval);
+                        setTimeout(queueFilingsToCheck.bind(this,opts),opts.interval);
                     });
 
                 });
@@ -41,9 +38,19 @@ function queueFilingsToCheck() {
             console.error(error);
 
             console.log('waiting');
-            setTimeout(queueFilingsToCheck,interval);
+            setTimeout(queueFilingsToCheck.bind(this,opts),opts.interval);
         }
     });
 }
 
-queueFilingsToCheck();
+module.exports = function (opts) {
+    opts = _.defaults(opts,{
+        interval: 60000
+    });
+
+    queueFilingsToCheck(opts);
+};
+
+if (require.main === module) {
+    module.exports();
+}

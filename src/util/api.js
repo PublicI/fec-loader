@@ -1,17 +1,15 @@
-var async = require('async'),
+var _ = require('lodash'),
+    async = require('async'),
     checkForFiling = require('./check'),
-    request = require('request'),
-    models = require('../models');
+    models = require('../models'),
+    request = require('request');
 
-var lookBehind = 100,
-    interval = 60000;
-
-function queueFilingsToCheck() {
+function queueFilingsToCheck(opts) {
     console.log('checking API');
 
     models.fec_filing.findAll({
             attributes: ['filing_id'],
-            limit: lookBehind,
+            limit: opts.lookBehind,
             order: [
                 ['filing_id', 'DESC']
             ]
@@ -22,7 +20,7 @@ function queueFilingsToCheck() {
             });
 
             request('https://api.open.fec.gov/v1/efile/filings/?sort=-receipt_date&per_page=' +
-                    lookBehind + '&api_key=' + process.env.FEC_KEY +
+                    opts.lookBehind + '&api_key=' + process.env.FEC_KEY +
                     '&page=1&cache=' + Math.round(Math.random()*100), function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     var data = JSON.parse(body);
@@ -40,13 +38,13 @@ function queueFilingsToCheck() {
 
                         async.mapSeries(tasks, checkForFiling, function () {
                             console.log('waiting');
-                            setTimeout(queueFilingsToCheck,interval);
+                            setTimeout(queueFilingsToCheck.bind(this,opts),opts.interval);
                         });
                     }
                     else {
                         console.error('no data or results');
 
-                        setTimeout(queueFilingsToCheck,interval);
+                        setTimeout(queueFilingsToCheck.bind(this,opts),opts.interval);
                     }
                 }
                 else {
@@ -58,11 +56,22 @@ function queueFilingsToCheck() {
                     }
 
                     console.log('waiting');
-                    setTimeout(queueFilingsToCheck,interval);
+                    setTimeout(queueFilingsToCheck.bind(this,opts),opts.interval);
                 }
             });
 
         });
 }
 
-queueFilingsToCheck();
+module.exports = function init (opts) {
+    opts = _.defaults(opts,{
+        lookBehind: 100,
+        interval: 60000
+    });
+
+    queueFilingsToCheck(opts);
+};
+
+if (require.main === module) {
+    module.exports();
+}

@@ -1,10 +1,9 @@
-var fs = require('fs'),
+var _ = require('lodash'),
+    fs = require('fs'),
     filingQueue = require('./import');
 
-var filings_dir = __dirname + '/../data/downloaded';
-
-function init(filings_dir) {
-    fs.readdir(filings_dir, function(err, files) {
+function init(opts) {
+    fs.readdir(opts.dir, function(err, files) {
         if (err) throw err;
 
         filingQueue.drain = null;
@@ -17,7 +16,7 @@ function init(filings_dir) {
             filingQueue.push({
                 name: file,
                 openStream: function (cb) {
-                    cb(null,fs.createReadStream(filings_dir + '/' + file));
+                    cb(null,fs.createReadStream(opts.dir + '/' + file));
                 }
             });
         });
@@ -29,4 +28,14 @@ function init(filings_dir) {
     });
 }
 
-init(filings_dir);
+module.exports = function (opts) {
+    opts = _.defaults(opts,{
+        dir: __dirname + '/../data/downloaded'
+    });
+
+    init(opts);
+};
+
+if (require.main === module) {
+    module.exports();
+}
