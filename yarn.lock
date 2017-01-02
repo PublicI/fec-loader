@@ -477,6 +477,16 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
+"github:chriszs/fec-model":
+  name fec-model
+  version "0.4.0"
+  resolved "https://codeload.github.com/chriszs/fec-model/tar.gz/f25970288ec0199fb0e932a4c61ad1eb95cf9325"
+  dependencies:
+    moment "^2.13.0"
+    pg "^5.0.0"
+    readdir-recursive "0.0.4"
+    sequelize "^3.23.3"
+
 glob@^7.0.5:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.1.tgz#805211df04faaf1c63a3600306cdf5ade50b2ec8"
