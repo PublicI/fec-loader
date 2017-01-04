@@ -226,17 +226,6 @@ date-extended@~0.0.3:
     extended "~0.0.3"
     is-extended "~0.0.3"
 
-"db-streamer@https://github.com/chriszs/db-streamer.git":
-  version "0.0.0-semantically-released"
-  resolved "https://github.com/chriszs/db-streamer.git#4ab8fd1b95861501bf3db130a5bccaedd518fa26"
-  dependencies:
-    async "^2.1.2"
-    moment "^2.11.2"
-    pg "^6.0.0"
-    pg-copy-streams "^1.2.0"
-    sequelize "^3.24.3"
-    url-parse "^1.0.2"
-
 debug@^2.2.0:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.5.1.tgz#9107bb4a506052ec2a02314bc606313ed2b921c1"
@@ -569,6 +558,18 @@ http-signature@~1.1.0:
     assert-plus "^0.2.0"
     jsprim "^1.2.2"
     sshpk "^1.7.0"
+
+"https://github.com/chriszs/db-streamer.git":
+  name db-streamer
+  version "0.0.0-semantically-released"
+  resolved "https://github.com/chriszs/db-streamer.git#3fd0ee0d5673d8d2cfa8cfc60e9cfa4cf8fe885c"
+  dependencies:
+    async "^2.1.2"
+    moment "^2.11.2"
+    pg "^6.0.0"
+    pg-copy-streams "^1.2.0"
+    sequelize "^3.24.3"
+    url-parse "^1.0.2"
 
 inflection@^1.6.0:
   version "1.10.0"
