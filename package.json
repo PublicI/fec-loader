@@ -16,5 +16,8 @@
     "rss-parser": "^2.5.2",
     "yauzl": "^2.4.2"
   },
+  "scripts": {
+    "start": "node --max-old-space-size=4000 ./src/util/fec/rss"
+  },
   "main": "./src/app"
 }
