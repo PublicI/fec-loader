@@ -19,10 +19,11 @@ function queueFilingsToCheck() {
 
             models.fec_filing.findAll({
                     attributes: ['filing_id'],
-                    limit: _.min(newFilings),
-                    order: [
-                        ['filing_id', 'DESC']
-                    ]
+                    where: {
+                        filing_id: {
+                            gte: _.min(newFilings)
+                        }
+                    }
                 })
                 .then(function(filings) {
                     filings = filings.map(function(filing) {
