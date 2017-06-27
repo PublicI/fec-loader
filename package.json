@@ -7,7 +7,7 @@
     "async": "^2.0.0",
     "brake": "^1.0.1",
     "fec-model": "github:chriszs/fec-model",
-    "fec-parse": "^0.6.0",
+    "fec-parse": "^0.7.0",
     "lodash": "^4.12.0",
     "numeral": "^1.5.3",
     "pg": "^4.5.5",
