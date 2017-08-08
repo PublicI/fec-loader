@@ -8,18 +8,18 @@ var api = require('./lib/api'),
     unzip = require('./lib/unzip');
 
 module.exports = {
-    api: api,
-    check: check,
-    dir: dir,
-    increment: increment,
-    queue: queue,
-    rss: rss,
+    api,
+    check,
+    dir,
+    increment,
+    queue,
+    rss,
     sync: models.sync,
-    unzip: unzip
+    unzip
 };
 
 if (require.main === module) {
-    models.sync(function () {
+    models.sync(() => {
         // no-op
     });
 }
