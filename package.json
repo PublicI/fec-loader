@@ -9,7 +9,7 @@
     "commander": "^2.9.0",
     "db-streamer": "github:chriszs/db-streamer",
     "fec-model": "github:chriszs/fec-model",
-    "fec-parse": "^0.7.0",
+    "fec-parse": "^0.8.0",
     "highland": "^2.10.1",
     "lodash": "^4.12.0",
     "numeral": "^1.5.3",
