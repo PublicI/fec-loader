@@ -162,17 +162,17 @@ fd-slicer@~1.0.1:
     pend "~1.2.0"
 
 "fec-model@github:chriszs/fec-model":
-  version "0.4.0"
-  resolved "https://codeload.github.com/chriszs/fec-model/tar.gz/fd254cdac584e7277b8858abf577a3c21105d312"
+  version "0.5.0"
+  resolved "https://codeload.github.com/chriszs/fec-model/tar.gz/7fae108f36d35e9f27219bf8bead8cbcb6f0d8da"
   dependencies:
     moment "^2.13.0"
     pg "^5.0.0"
     readdir-recursive "0.0.4"
     sequelize "^3.23.3"
 
-fec-parse@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/fec-parse/-/fec-parse-0.8.0.tgz#55754a1165049af8efa389b0f9e23191943e9302"
+fec-parse@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/fec-parse/-/fec-parse-0.10.0.tgz#48f91dc7c23a51aeb5683865b33cf6c0f571e994"
   dependencies:
     generate-function "^2.0.0"
     generate-object-property "^1.2.0"

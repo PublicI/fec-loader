@@ -14,6 +14,7 @@ var formModels = [
     models.fec_filing,
     models.fec_presidential_summary,
     models.fec_pac_summary,
+    models.fec_campaign_summary,
     models.fec_group_summary,
     models.fec_lobbyist_bundler,
     models.fec_contribution,
