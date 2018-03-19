@@ -27,7 +27,12 @@ function queueFilingsToCheck(err,results) {
             limit: lookBehind,
             order: [
                 ['filing_id', 'DESC']
-            ]
+            ],
+            where: {
+                filing_id: {
+                    $lt: 5000000
+                }
+            }
         })
         .then(function(filings) {
             filings = filings.map(function(filing) {
