@@ -9,6 +9,7 @@ var payload = 400; // how many rows get processed by cargo at a time
 
 var formModels = [
     models.fec_paper_filing,
+    models.fec_paper_campaign_summary,
     models.fec_paper_contribution,
     models.fec_paper_expenditure,
     models.fec_filing,
