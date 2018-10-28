@@ -9,5 +9,15 @@
     "fec-parse": "^0.17.0",
     "rss-parser": "^2.5.2",
     "through2": "^2.0.3"
+  },
+  "bin": {
+    "api2fec": "./bin/api2fec",
+    "fec2json": "./bin/fec2json",
+    "fec2psql": "./bin/fec2psql",
+    "increment2fec": "./bin/increment2fec",
+    "rss2fec": "./bin/rss2fec"
+  },
+  "scripts": {
+    "start": "bin/rss2fec | head -n 5 | xargs -n 1 -I % sh -c '{ curl -s % | bin/fec2psql | psql; sleep 2; }'"
   }
 }
