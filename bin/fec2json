@@ -1,0 +1,35 @@
+#!/usr/bin/env node
+// jshint esnext:true
+
+const fs = require('fs'),
+    parser = require('fec-parse'),
+    through2 = require('through2');
+
+const parse = parser();
+
+const filing_id = process.argv[2];
+
+function processRow(row, enc, next) {
+    row.filing_id = filing_id;
+
+    if ('report_id' in row && row.report_id) {
+        row.report_id = parseInt(row.report_id.replace('FEC-', ''));
+    }
+    
+    this.push(`${JSON.stringify(row)}\n`);
+
+    next();
+}
+
+process.stdin
+    .pipe(parser())
+    .pipe(
+        through2(
+            { objectMode: true },
+            processRow,
+            next => {
+                next();
+            }
+        )
+    )
+    .pipe(process.stdout);
