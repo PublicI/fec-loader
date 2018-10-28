@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+// jshint esnext:true
+
+var axios = require('axios');
+
+const apiUrl = `https://api.open.fec.gov/v1/efile/filings/?sort=-receipt_date&per_page=100&api_key=${process.env.FEC_KEY}&page=1&cache=${Math.round(Math.random()*100)}`;
+
+axios.get(apiUrl)
+    .then(({ data }) => {
+        let filings = data.results.map(filing =>
+            parseInt(
+                filing.fec_url
+                    .replace('http://docquery.fec.gov/dcdev/posted/', '')
+                    .replace('.fec', '')
+            ) + ' ' + filing.fec_url
+        );
+
+        console.log(filings.join('\n'));
+    })
+    .catch(err => {
+        console.error(err);
+    });
