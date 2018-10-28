@@ -1,0 +1,12 @@
+#!/bin/bash
+
+FEED_URL="http://efilingapps.fec.gov/rss/generate?preDefinedFilingType=ALL"
+
+URLS=$(curl $FEED_URL -s | sed -n 's/.*<link>\(http:\/\/docquery.fec.gov\/dcdev\/posted\/\([0-9]*\).fec\)<\/link>.*/\1|\2/p')
+
+while IFS='|' read -r url id
+do
+	echo $url
+	curl -s $url | ./fec2psql $id | psql
+	sleep 2
+done <<< "$URLS"
