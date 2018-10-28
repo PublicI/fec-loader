@@ -38,7 +38,7 @@ models.fec_filing.findAll({
             }
         }
 
-        tasks = tasks.map(task => `${task} http://docquery.fec.gov/dcdev/posted/${task}.fec`);
+        tasks = tasks.map(task => `http://docquery.fec.gov/dcdev/posted/${task}.fec`);
 
         console.log(tasks.join('\n'));
     })

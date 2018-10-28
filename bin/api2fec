@@ -7,13 +7,7 @@ const apiUrl = `https://api.open.fec.gov/v1/efile/filings/?sort=-receipt_date&pe
 
 axios.get(apiUrl)
     .then(({ data }) => {
-        let filings = data.results.map(filing =>
-            parseInt(
-                filing.fec_url
-                    .replace('http://docquery.fec.gov/dcdev/posted/', '')
-                    .replace('.fec', '')
-            ) + ' ' + filing.fec_url
-        );
+        let filings = data.results.map(filing => filing.fec_url);
 
         console.log(filings.join('\n'));
     })

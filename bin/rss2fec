@@ -12,13 +12,7 @@ parser.parseURL(
             console.error(err);
         }
 
-        const filings = parsed.feed.entries.map(filing =>
-            parseInt(
-                filing.link
-                    .replace('http://docquery.fec.gov/dcdev/posted/', '')
-                    .replace('.fec', '')
-            ) + ' ' + filing.link
-        );
+        const filings = parsed.feed.entries.map(filing => filing.link);
 
         console.log(filings.join('\n'));
     }
