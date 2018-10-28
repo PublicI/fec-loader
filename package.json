@@ -7,6 +7,7 @@
     "axios": "^0.18.0",
     "fec-model": "github:PublicI/fec-model",
     "fec-parse": "^0.17.0",
+    "moment": "^2.22.2",
     "rss-parser": "^2.5.2",
     "through2": "^2.0.3"
   },
