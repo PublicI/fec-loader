@@ -91,7 +91,7 @@ process.stdin
         through2(
             { objectMode: true },
             processRow,
-            next => {
+            function (next) {
                 this.push('\\.\n');
                 next();
             }
