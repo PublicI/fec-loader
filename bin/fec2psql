@@ -71,7 +71,7 @@ function processRow(row, enc, next) {
                         .replace(/\\/g, '\\\\')
                         .replace(/\n/g, '\\\n')
                         .replace(/\t/g, '\\\t')
-                        .replace(/\\./g, '\\\\.');
+                        .replace(/\\\./g, '\\\\.');
                 } else if (value) {
                     return value;
                 }
