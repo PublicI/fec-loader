@@ -1,0 +1,72 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    draft: {{ default "draft-app" .Values.draft }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      annotations:
+        buildID: {{ .Values.buildID }}
+      labels:
+        draft: {{ default "draft-app" .Values.draft }}
+        app: {{ template "fullname" . }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.service.internalPort }}
+        env:
+        - name: "DB_NAME"
+          valueFrom:
+            secretKeyRef:
+              key:  db_name
+              name: {{ .Release.Name }}-auth
+        - name: "DB_USER"
+          valueFrom:
+            secretKeyRef:
+              key:  db_user
+              name: {{ .Release.Name }}-auth
+        - name: "DB_PASS"
+          valueFrom:
+            secretKeyRef:
+              key:  db_pass
+              name: {{ .Release.Name }}-auth
+        - name: "DB_HOST"
+          valueFrom:
+            secretKeyRef:
+              key:  db_host
+              name: {{ .Release.Name }}-auth
+        - name: "DB_DRIVER"
+          valueFrom:
+            secretKeyRef:
+              key:  db_driver
+              name: {{ .Release.Name }}-auth
+        - name: "DB_PORT"
+          valueFrom:
+            secretKeyRef:
+              key:  db_port
+              name: {{ .Release.Name }}-auth
+        - name: "AWS_ACCESS_KEY_ID"
+          valueFrom:
+            secretKeyRef:
+              key:  aws_access_key_id
+              name: {{ .Release.Name }}-auth
+        - name: "AWS_ACCESS_KEY_ID"
+          valueFrom:
+            secretKeyRef:
+              key:  aws_access_key_id
+              name: {{ .Release.Name }}-auth
+        - name: "SLACK_WEBHOOK"
+          valueFrom:
+            secretKeyRef:
+              key:  slack_webhook
+              name: {{ .Release.Name }}-auth
+
+        resources:
+{{ toYaml .Values.resources | indent 12 }}
