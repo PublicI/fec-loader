@@ -5,7 +5,7 @@ var _ = require('lodash'),
     models = require('../../models'),
     parser = require('rss-parser');
 
-var interval = 60000;
+// var interval = 60000;
 
 function queueFilingsToCheck() {
     console.log('checking RSS');
@@ -31,8 +31,8 @@ function queueFilingsToCheck() {
                     });
 
                     async.mapSeries(_.difference(newFilings,filings), checkForFiling, function () {
-                        console.log('waiting');
-                        setTimeout(queueFilingsToCheck,interval);
+                        console.log('done');
+                        // setTimeout(queueFilingsToCheck,interval);
                     });
 
                 });
@@ -41,8 +41,8 @@ function queueFilingsToCheck() {
         else {
             console.error(error);
 
-            console.log('waiting');
-            setTimeout(queueFilingsToCheck,interval);
+            console.log('done');
+            // setTimeout(queueFilingsToCheck,interval);
         }
     });
 }
