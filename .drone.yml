@@ -1,14 +1,5 @@
 pipeline:
-  build-dry-run:
-    image: plugins/docker
-    dry-run: true
-    repo: publicintegrity/fec-loader
-    when:
-      event: [push, tag]
-      branch:
-        excludes: master
-
-  build-push:
+  build:
     image: plugins/docker
     secrets: [ docker_username, docker_password ]
     repo: publicintegrity/fec-loader
