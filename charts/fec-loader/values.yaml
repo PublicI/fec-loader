@@ -3,22 +3,16 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 image:
+  repository: publicintegrity/fec-loader
+  tag: latest
   pullPolicy: IfNotPresent
-service:
-  name: node
-  type: ClusterIP
-  externalPort: 8080
-  internalPort: 8080
 resources:
   limits:
     cpu: 100m
-    memory: 128Mi
+    memory: 2Gi
   requests:
     cpu: 100m
     memory: 128Mi
-ingress:
-  enabled: false
-basedomain: apps.fivetwentyseven.com
 db:
   driver: postgres
   port: "5432"

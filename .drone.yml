@@ -1,18 +1,32 @@
 pipeline:
-  build:
+  build-dry-run:
+    image: plugins/docker
+    dry-run: true
+    when:
+      event: [push, tag]
+      branch:
+        excludes: master
+
+  build-push:
     image: plugins/docker
     secrets: [ docker_username, docker_password ]
     repo: publicintegrity/fec-loader
+    when:
+      event: [push, tag]
+      branch: master
 
   helm_deploy:
     image: peloton/drone-helm
     chart: ./charts/fec-loader
-    release: notifier
-    values: db.user=$${DB_USER},db.pass=$${DB_PASS},db.host=$${DB_HOST},db.name=$${DB_NAME},slack.webhook=${NOTIFY_SLACK_WEBHOOK},aws.access_key_id=$${AWS_ACCESS_KEY_ID},aws.secret_access_key=$${AWS_SECRET_ACCESS_KEY},image.repository=publicintegrity/fec-loader,image.tag=latest
+    release: fec-loader
+    values: db.user=$${DB_USER},db.pass=$${DB_PASS},db.host=$${DB_HOST},db.name=$${DB_NAME},fec_key=$${FEC_KEY},image.repository=publicintegrity/fec-loader,image.tag=latest
     prefix: 
-    namespace: notifier
-    secrets: [ api_server, kubernetes_token, db_user, db_pass, db_host, db_name, notify_slack_webhook, aws_access_key_id, aws_secret_access_key ]
+    namespace: fec-loader
+    secrets: [ api_server, kubernetes_token, db_user, db_pass, db_host, db_name, fec_key ]
     skip_tls_verify: true
+    when:
+      event: deployment
+      environment: production
 
   slack:
     image: plugins/slack
