@@ -2,6 +2,7 @@ pipeline:
   build-dry-run:
     image: plugins/docker
     dry-run: true
+    repo: publicintegrity/fec-loader
     when:
       event: [push, tag]
       branch:
