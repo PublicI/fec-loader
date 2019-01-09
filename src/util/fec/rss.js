@@ -31,6 +31,7 @@ function queueFilingsToCheck() {
                     });
 
                     async.mapSeries(_.difference(newFilings,filings), checkForFiling, function () {
+                        models.sequelize.close();
                         console.log('done');
                         // setTimeout(queueFilingsToCheck,interval);
                     });
@@ -41,6 +42,7 @@ function queueFilingsToCheck() {
         else {
             console.error(error);
 
+            models.sequelize.close();
             console.log('done');
             // setTimeout(queueFilingsToCheck,interval);
         }
