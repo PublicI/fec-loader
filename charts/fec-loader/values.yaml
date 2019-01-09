@@ -5,7 +5,7 @@ replicaCount: 1
 image:
   repository: publicintegrity/fec-loader
   tag: latest
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
 resources:
   limits:
     cpu: 100m
