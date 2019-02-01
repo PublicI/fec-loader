@@ -11,8 +11,8 @@ resources:
     cpu: 1
     memory: 4Gi
   requests:
-    cpu: 100m
-    memory: 512Mi
+    cpu: 0.5
+    memory: 2Gi
 db:
   driver: postgres
   port: "5432"
