@@ -36,6 +36,10 @@ function queueFilingsToCheck() {
                         // setTimeout(queueFilingsToCheck,interval);
                     });
 
+                })
+                .catch(function () {
+                    models.sequelize.close();
+                    console.log('done');
                 });
 
         }
