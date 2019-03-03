@@ -1,0 +1,28 @@
+pipeline:
+  build_dry_run:
+    image: plugins/docker
+    secrets: [ docker_username, docker_password ]
+    repo: publicintegrity/fec-loader
+    tags:
+      - ${DRONE_COMMIT_SHA:0:12}
+      - latest
+    dry_run: true
+    when:
+      event: [push, tag]
+
+  build_push:
+    image: plugins/docker
+    secrets: [ docker_username, docker_password ]
+    repo: publicintegrity/fec-loader
+    tags:
+      - ${DRONE_COMMIT_SHA:0:12}
+      - latest
+    when:
+      event: deployment
+      environment: production
+
+  slack:
+    image: plugins/slack
+    secrets: [ slack_webhook ]
+    when:
+      status: [ success, failure ]
