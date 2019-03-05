@@ -16,7 +16,7 @@ curl -s http://docquery.fec.gov/dcdev/posted/1283013.fec | fec2psql 1283013 | ps
 To load the most recent five filings from the FEC's RSS feed, run:
 
 ```bash
-rss2psql
+rss2psql | psql
 ```
 
 To convert a filing to new-line separated JSON, run:
