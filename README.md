@@ -4,12 +4,12 @@ A set of flexible command line utilities designed to discover, convert and load 
 
 To convert a filing to newline-separated JSON without installing, try:
 ```bash
-FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p github:PublicI/fec-loader#cli fec2json $FILING_ID > $FILING_ID".ndjson"
+FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p @publici/fec-loader fec2json $FILING_ID > $FILING_ID".ndjson"
 ```
 
 To install:
 ```bash
-npm install -g github:PublicI/fec-loader#cli
+npm install -g @publici/fec-loader
 ```
 
 To load a filing from the FEC into a Postgres database, run:
