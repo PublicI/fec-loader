@@ -14,9 +14,14 @@ To install:
 npm install -g @publici/fec-loader
 ```
 
+To set up a Postgres database for FEC filings and the environment variables needed to connect:
+```
+export PGHOST=<database host> PGDATABASE=<database name> PGUSER=<database user> PGPASSWORD=<database password>
+createfecschema
+```
+
 To load a filing from the FEC into a Postgres database, run:
 ```bash
-export PGHOST=<database host> PGDATABASE=<database name> PGUSER=<database user> PGPASSWORD=<database password>
 FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | fec2psql $FILING_ID | psql
 ```
 

@@ -15,6 +15,7 @@
     "fec2psql": "./bin/fec2psql",
     "increment2fec": "./bin/increment2fec",
     "rss2fec": "./bin/rss2fec",
-    "rss2psql": "./bin/rss2psql"
+    "rss2psql": "./bin/rss2psql",
+    "createfecschema": "./bin/createfecschema"
   }
 }
