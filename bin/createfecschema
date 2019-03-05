@@ -6,10 +6,8 @@ const models = require('@publici/fec-model')({
     name: process.env.PGDATABASE,
     user: process.env.PGUSER,
     pass: process.env.PGPASSWORD,
-    host: process.env.PGHOST,
-    port: process.env.PGPORT
+    host: process.env.PGHOST || 'localhost',
+    port: process.env.PGPORT || 5432
 });
 
-models.sync(function (argument) {
-    console.log('done');
-});
+models.sync(() => {});
