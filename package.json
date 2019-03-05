@@ -1,6 +1,6 @@
 {
   "name": "fec-loader",
-  "version": "0.4.0-alpha",
+  "version": "1.0.0-alpha",
   "description": "Loads FEC data into a database",
   "license": "MIT",
   "dependencies": {
