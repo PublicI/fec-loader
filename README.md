@@ -1,6 +1,6 @@
 # fec-loader
 
-A set of flexible command line utilities designed to discover, convert and load raw FEC filings into a database. Requires Node and Bash.
+A set of flexible command line utilities designed to discover, convert and load raw FEC filings into a database in a fast, streaming manner. Requires Node and Bash.
 
 To convert a filing to newline-separated JSON without installing, try:
 ```bash
