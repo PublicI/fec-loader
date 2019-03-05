@@ -4,7 +4,7 @@ A set of flexible command line utilities designed to discover, convert and load 
 
 To convert a filing to newline-separated JSON without installing, try:
 ```bash
-curl -s http://docquery.fec.gov/dcdev/posted/1283013.fec | npx -p github:PublicI/fec-loader#cli fec2json 1283013 > 1283013.ndjson
+FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p github:PublicI/fec-loader#cli fec2json $FILING_ID > $FILING_ID".ndjson"
 ```
 
 To install:
@@ -15,7 +15,7 @@ npm install -g github:PublicI/fec-loader#cli
 To load a filing from the FEC into a Postgres database, run:
 ```bash
 export PGHOST=<database host> PGDATABASE=<database name> PGUSER=<database user> PGPASSWORD=<database password>
-curl -s http://docquery.fec.gov/dcdev/posted/1283013.fec | fec2psql 1283013 | psql
+FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | fec2psql $FILING_ID | psql
 ```
 
 To list the filings available from the FEC's RSS feed run:
