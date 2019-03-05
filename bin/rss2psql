@@ -5,7 +5,7 @@ URLS=$($DIR"/rss2fec" | head -n 5)
 
 for url in $URLS; do
 	id=$(echo $url | tr -dc '0-9')
-	echo $id
+	# echo $id
 	curl -s $url | $DIR"/fec2psql" $id
 	sleep 2
 done <<< "$URLS"
