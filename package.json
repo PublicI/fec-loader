@@ -1,10 +1,10 @@
 {
-  "name": "fec-loader",
+  "name": "@publici/fec-loader",
   "version": "1.0.0-alpha",
   "description": "Loads FEC data into a database",
   "license": "MIT",
   "dependencies": {
-    "fec-model": "github:PublicI/fec-model",
+    "@publici/fec-model": "^0.6.0",
     "fec-parse": "^0.17.0",
     "moment": "^2.22.2",
     "through2": "^2.0.3"

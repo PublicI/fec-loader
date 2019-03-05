@@ -2,7 +2,7 @@
 // jshint esnext:true
 
 const fs = require('fs'),
-    models = require('fec-model')({
+    models = require('@publici/fec-model')({
         driver: 'postgres'
     }),
     moment = require('moment'),

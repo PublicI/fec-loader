@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // jshint esnext:true
 
-var models = require('fec-model')({
+var models = require('@publici/fec-model')({
     driver: 'postgres',
     name: process.env.PGDATABASE,
     user: process.env.PGUSER,
