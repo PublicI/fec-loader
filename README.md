@@ -2,9 +2,11 @@
 
 A set of flexible command line utilities designed to discover, convert and load raw FEC filings into a database in a fast, streaming manner.
 
-Requires Node and Bash.
+In [benchmarks](https://github.com/publici/fec-bench), fec-loader performs about nine times faster than its closest competitor. E.g. on a recent MacBook Air, a 2.3 gigabyte ActBlue filing parses in three minutes instead of 23 minutes.
 
-To convert a filing to newline-separated JSON without installing, try:
+Requires [Node](https://nodejs.org/) and Bash.
+
+To try converting a filing to newline-separated JSON without installing fec-loader, paste the following into a terminal:
 ```bash
 FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p @publici/fec-loader fec2json $FILING_ID > $FILING_ID".ndjson"
 ```
@@ -34,4 +36,9 @@ To load the most recent five filings from the FEC's RSS feed, run:
 
 ```bash
 rss2psql | psql
+```
+
+To get just a summary line as JSON:
+```bash
+FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | head -n 10 | fec2json | sed -n 2p
 ```
