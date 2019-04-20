@@ -1,0 +1,15 @@
+---
+pipeline:
+  name: fec-raw-rss-check
+transform:
+  image: publicintegrity/fec-loader
+  cmd:
+  - bash
+  stdin:
+  - ./bin/rss2fec.sh > /pfs/out/urls.txt
+parallelism_spec:
+  constant: 1
+input:
+  cron:
+    name: tick
+    spec: "*/5 * * * *"
