@@ -21,7 +21,7 @@ npm install -g @publici/fec-loader
 ## Setup
 
 To set up a Postgres database for FEC filings and the environment variables needed to connect:
-```
+```bash
 export PGHOST=<database host> PGDATABASE=<database name> PGUSER=<database user> PGPASSWORD=<database password>
 createfecschema
 ```
