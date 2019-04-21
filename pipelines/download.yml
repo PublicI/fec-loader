@@ -1,0 +1,17 @@
+---
+pipeline:
+  name: fec-raw-filing-download
+transform:
+  image: publicintegrity/fec-loader:1664ce452bb0
+  cmd:
+  - bash
+  stdin:
+  - for file in $(find /pfs/check/ -name "*.fec"); do curl -s "http://docquery.fec.gov/dcdev/posted/$(basename $file)" | gzip -9 > "/pfs/out/$(basename $file).gz"; done
+parallelism_spec:
+  constant: 2
+input:
+  pfs:
+    name: check
+    repo: fec-raw-rss-filing-check
+    glob: /*
+    empty_files: true

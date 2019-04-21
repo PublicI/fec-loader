@@ -1,0 +1,15 @@
+---
+pipeline:
+  name: fec-raw-rss-filing-check
+transform:
+  image: publicintegrity/fec-loader:1664ce452bb0
+  cmd:
+  - bash
+  stdin:
+  - ./bin/rss2fec | while read url; do touch "/pfs/out/$(echo $url | tr -dc '0-9').fec"; done
+parallelism_spec:
+  constant: 1
+input:
+  cron:
+    name: tick
+    spec: "*/1 * * * *"

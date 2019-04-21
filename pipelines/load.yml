@@ -1,0 +1,31 @@
+---
+pipeline:
+  name: fec-raw-load-filings
+transform:
+  image: publicintegrity/fec-loader:1664ce452bb0
+  cmd:
+  - bash
+  stdin:
+  # psql -c "delete from fec_filings where filing_id = $(echo $file | tr -dc '0-9')";
+  - for file in $(find /pfs/filings/ -name "*.fec.gz"); do gunzip < $file | ./bin/fec2psql $(echo $file | tr -dc '0-9') | psql -v ON_ERROR_STOP=on --single-transaction; done
+  secrets:
+    - name: pachyderm-postgres-politics-auth
+      env_var: PGHOST
+      key: pghost
+    - name: pachyderm-postgres-politics-auth
+      env_var: PGDATABASE
+      key: pgdatabase
+    - name: pachyderm-postgres-politics-auth
+      env_var: PGUSER
+      key: pguser
+    - name: pachyderm-postgres-politics-auth
+      env_var: PGPASSWORD
+      key: pgpassword
+parallelism_spec:
+  constant: 2
+input:
+  pfs:
+    name: filings
+    repo: fec-raw-filing-download
+    glob: /*
+    lazy: true

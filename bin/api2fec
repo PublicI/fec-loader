@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl -s "https://api.open.fec.gov/v1/efile/filings/?sort=-receipt_date&per_page=100&api_key=$FEC_KEY&page=1&cache=$RANDOM"  | jq -r '.results[].fec_url'

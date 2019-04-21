@@ -1,23 +1,21 @@
 {
-  "name": "fec-loader",
-  "version": "0.4.0",
+  "name": "@publici/fec-loader",
+  "version": "1.0.0-alpha.3",
   "description": "Loads FEC data into a database",
   "license": "MIT",
   "dependencies": {
-    "async": "^2.0.0",
-    "brake": "^1.0.1",
-    "fec-model": "github:PublicI/fec-model",
+    "@publici/fec-model": "^0.6.0",
     "fec-parse": "^0.17.0",
-    "lodash": "^4.12.0",
-    "numeral": "^1.5.3",
-    "pg": "^4.5.5",
-    "progress-stream": "^1.2.0",
-    "request": "^2.72.0",
-    "rss-parser": "^2.5.2",
-    "yauzl": "^2.4.2"
+    "moment": "^2.22.2",
+    "through2": "^2.0.3"
   },
-  "scripts": {
-    "start": "node --max-old-space-size=4000 ./src/util/fec/rss"
-  },
-  "main": "./src/app"
+  "bin": {
+    "api2fec": "./bin/api2fec",
+    "fec2json": "./bin/fec2json",
+    "fec2psql": "./bin/fec2psql",
+    "increment2fec": "./bin/increment2fec",
+    "rss2fec": "./bin/rss2fec",
+    "rss2psql": "./bin/rss2psql",
+    "createfecschema": "./bin/createfecschema"
+  }
 }

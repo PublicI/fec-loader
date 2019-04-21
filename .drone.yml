@@ -1,21 +1,22 @@
 pipeline:
-  build:
+  build_dry_run:
     image: plugins/docker
     secrets: [ docker_username, docker_password ]
     repo: publicintegrity/fec-loader
+    tags:
+      - ${DRONE_COMMIT_SHA:0:12}
+      - latest
+    dry_run: true
     when:
       event: [push, tag]
-      branch: master
 
-  helm_deploy:
-    image: peloton/drone-helm
-    chart: ./charts/fec-loader
-    release: fec-loader
-    values: db.user=$${DB_USER},db.pass=$${DB_PASS},db.host=$${DB_HOST},db.name=$${DB_NAME},fec_key=$${FEC_KEY},image.repository=publicintegrity/fec-loader,image.tag=latest
-    prefix: 
-    namespace: fec-loader
-    secrets: [ api_server, kubernetes_token, db_user, db_pass, db_host, db_name, fec_key ]
-    skip_tls_verify: true
+  build_push:
+    image: plugins/docker
+    secrets: [ docker_username, docker_password ]
+    repo: publicintegrity/fec-loader
+    tags:
+      - ${DRONE_COMMIT_SHA:0:12}
+      - latest
     when:
       event: deployment
       environment: production

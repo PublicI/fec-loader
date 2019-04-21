@@ -1,7 +1,4 @@
 node_modules
-src/data/**/*.fec
-src/data/**/*.zip
-src/data/fec/weekly
-src/data/fec/sheets
-src/bin/*.sh
+data/**/*.fec
+data/**/*.zip
 bin/*.sh
