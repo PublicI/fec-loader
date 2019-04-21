@@ -13,7 +13,7 @@ function processRow(row, enc, next) {
     row.filing_id = filing_id;
 
     if ('report_id' in row && row.report_id) {
-        row.report_id = parseInt(row.report_id.replace('FEC-', ''));
+        row.report_id = parseInt(row.report_id.replace('FEC-', '').replace('SEN-',''));
     }
     
     this.push(`${JSON.stringify(row)}\n`);

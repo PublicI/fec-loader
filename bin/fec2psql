@@ -39,7 +39,7 @@ function processRow(row, enc, next) {
     const model = formModels.find(model => model.match(row));
 
     if ('report_id' in row && row.report_id) {
-        row.report_id = parseInt(row.report_id.replace('FEC-', ''));
+        row.report_id = parseInt(row.report_id.replace('FEC-', '').replace('SEN-',''));
     }
 
     if (typeof model !== 'undefined') {
