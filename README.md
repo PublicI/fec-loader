@@ -2,9 +2,9 @@
 
 A set of flexible command line utilities designed to discover, convert and load raw FEC filings into a database in a fast, streaming manner.
 
-In [benchmarks](https://github.com/publici/fec-bench), fec-loader performs about nine times faster than its closest competitor. E.g. on a recent MacBook Air, a 2.3 gigabyte ActBlue filing parses in three minutes instead of 23 minutes.
+`fec-loader` is about nine times faster than similar Python solutions. For example, on a recent MacBook Air, a 2.3 gigabyte ActBlue filing parses in three minutes instead of 23 minutes.
 
-Requires [Node](https://nodejs.org/) and Bash.
+It requires [Node](https://nodejs.org/) and Bash.
 
 To try converting a filing to newline-separated JSON without installing fec-loader, paste the following into a terminal:
 ```bash
