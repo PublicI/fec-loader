@@ -24,12 +24,8 @@ function processRow(row, enc, next) {
 process.stdin
     .pipe(parser())
     .pipe(
-        through2(
-            { objectMode: true },
-            processRow,
-            next => {
-                next();
-            }
+        through2.obj(
+            processRow
         )
     )
     .pipe(process.stdout);
