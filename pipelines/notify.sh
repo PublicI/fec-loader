@@ -2,7 +2,7 @@
 
 for file in $(find /pfs/filings/ -name "*.fec.gz");
 do
-	SUMMARY=$(gunzip < $file | head -n 10 | fec2json | sed -n 2p)
+	SUMMARY=$(gunzip < $file | head -n 10 | ./bin/fec2json | sed -n 2p)
 	ID=$(echo $file | tr -dc '0-9')
 
 	if echo $SUMMARY | jq -e 'has("committee_name") and has("form_type") and has("filer_committee_id_number") and .form_type != "F24A" and .form_type != "F24N"' > /dev/null; then
