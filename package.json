@@ -7,7 +7,7 @@
     "@publici/fec-model": "^1.0.0-alpha.1",
     "fec-parse": "^0.17.0",
     "moment": "^2.24.0",
-    "through2": "^2.0.5"
+    "through2": "^3.0.1"
   },
   "bin": {
     "api2fec": "./bin/api2fec",
