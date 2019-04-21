@@ -2,7 +2,7 @@
 pipeline:
   name: fec-raw-filing-notify
 transform:
-  image: publicintegrity/fec-loader:46b661e92a30
+  image: publicintegrity/fec-loader:1664ce452bb0
   cmd:
   - bash
   stdin:
