@@ -6,15 +6,19 @@ A set of flexible command line utilities designed to discover, convert and load 
 
 It requires [Node](https://nodejs.org/) and Bash.
 
+## Try
+
 To try converting a filing to newline-separated JSON without installing fec-loader, paste the following into a terminal:
 ```bash
 FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p @publici/fec-loader fec2json $FILING_ID > $FILING_ID".ndjson"
 ```
+## Install
 
 To install:
 ```bash
 npm install -g @publici/fec-loader
 ```
+## Setup
 
 To set up a Postgres database for FEC filings and the environment variables needed to connect:
 ```
@@ -22,8 +26,11 @@ export PGHOST=<database host> PGDATABASE=<database name> PGUSER=<database user> 
 createfecschema
 ```
 
+## Use
+
 To load a filing from the FEC into a Postgres database, run:
 ```bash
+export PGHOST=<database host> PGDATABASE=<database name> PGUSER=<database user> PGPASSWORD=<database password>
 FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | fec2psql $FILING_ID | psql
 ```
 
