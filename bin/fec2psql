@@ -50,10 +50,10 @@ function processRow(row, enc, next) {
 
             tableName = model.tableName;
 
-            if ('created_date' in model.attributes) {
+            if ('created_date' in model.rawAttributes) {
                 row.created_date = moment().toISOString();
             }
-            if ('updated_date' in model.attributes) {
+            if ('updated_date' in model.rawAttributes) {
                 row.updated_date = moment().toISOString();
             }
 
