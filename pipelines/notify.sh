@@ -7,7 +7,7 @@ do
 
 	if echo $SUMMARY | jq -e 'has("committee_name") and has("form_type") and has("filer_committee_id_number") and .form_type != "F24A" and .form_type != "F24N"' > /dev/null; then
 		PAYLOAD=$(echo $SUMMARY | jq --compact-output --arg filing_id $ID '{$filing_id,form_type,committee_name,organization_name,filer_committee_id_number,coverage_from_date,coverage_through_date,col_a_total_receipts,col_a_total_disbursements,col_a_cash_on_hand_close_of_period}')
-		PAYLOAD=${PAYLOAD//\'/\\\'}
+		PAYLOAD=${PAYLOAD//\'/\'\'}
 		psql -c "NOTIFY fecImportStart, '$PAYLOAD';"
 	fi
 done
