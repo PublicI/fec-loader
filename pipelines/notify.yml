@@ -2,7 +2,7 @@
 pipeline:
   name: fec-raw-filing-notify
 transform:
-  image: publicintegrity/fec-loader:1664ce452bb0
+  image: publicintegrity/fec-loader:1eeddaa19e44
   cmd:
   - bash
   stdin:
@@ -22,9 +22,9 @@ transform:
       key: pgpassword
 parallelism_spec:
   constant: 1
+datum_tries: 2
 input:
   pfs:
     name: filings
     repo: fec-raw-filing-download
     glob: /*
-    lazy: true
