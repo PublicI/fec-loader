@@ -4,7 +4,7 @@ A set of flexible command line utilities designed to discover, convert and load 
 
 `fec-loader` is about nine times faster than similar Python solutions. For example, on a recent MacBook Air, a 2.3 gigabyte ActBlue filing parses in three minutes instead of 23 minutes.
 
-It requires [Node](https://nodejs.org/) and Bash.
+It requires [Node](https://nodejs.org/) and Bash. It uses [fec-parse](https://github.com/PublicI/fec-parse).
 
 ## Try
 
