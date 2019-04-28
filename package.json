@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "@publici/fec-model": "^1.0.0-alpha.3",
-    "fec-parse": "^0.17.0",
+    "fec-parse": "^0.19.0",
     "moment": "^2.24.0",
     "through2": "^3.0.1"
   },
