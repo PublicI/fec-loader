@@ -1,6 +1,6 @@
 {
   "name": "@publici/fec-loader",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.9",
   "description": "Loads FEC data into a database",
   "license": "MIT",
   "dependencies": {
