@@ -2,12 +2,11 @@
 pipeline:
   name: fec-raw-load-filings
 transform:
-  image: publicintegrity/fec-loader:1eeddaa19e44
+  image: publicintegrity/fec-loader:424040ab304e
   cmd:
   - bash
   stdin:
-  # psql -c "delete from fec_filings where filing_id = $(echo $file | tr -dc '0-9')";
-  - for file in $(find /pfs/filings/ -name "*.fec.gz"); do gunzip < $file | ./bin/fec2psql $(echo $file | tr -dc '0-9') | psql -v ON_ERROR_STOP=on --single-transaction; done
+  - for file in $(find /pfs/filings/ -name "*.fec.gz"); do gunzip < $file | (echo "DELETE FROM fec_filings WHERE filing_id = $(echo $file | tr -dc '0-9');" && cat) | ./bin/fec2psql $(echo $file | tr -dc '0-9') | psql -v ON_ERROR_STOP=on --single-transaction 2> "/pfs/out/"$(echo $file | tr -dc '0-9')".log"; done
   secrets:
     - name: pachyderm-postgres-politics-auth
       env_var: PGHOST
