@@ -2,7 +2,7 @@
 pipeline:
   name: fec-raw-rss-filing-check
 transform:
-  image: publicintegrity/fec-loader:1eeddaa19e44
+  image: publicintegrity/fec-loader
   cmd:
   - bash
   stdin:

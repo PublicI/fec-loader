@@ -2,7 +2,7 @@
 pipeline:
   name: fec-raw-filing-download
 transform:
-  image: publicintegrity/fec-loader:1eeddaa19e44
+  image: publicintegrity/fec-loader
   cmd:
   - bash
   stdin:
