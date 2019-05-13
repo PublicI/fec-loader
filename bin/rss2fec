@@ -1,3 +1,0 @@
-#!/bin/bash
-
-curl "http://efilingapps.fec.gov/rss/generate?preDefinedFilingType=ALL" -s | sed -n 's/.*<link>\(http:\/\/docquery.fec.gov\/dcdev\/posted\/[0-9]*.fec\)<\/link>.*/\1/p'

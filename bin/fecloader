@@ -1,0 +1,61 @@
+#!/usr/bin/env node
+
+const commands = require('../'),
+    updateNotifier = require('update-notifier'),
+    pkg = require('../package.json'),
+    yargs = require('yargs');
+
+updateNotifier({pkg}).notify();
+
+yargs
+    .scriptName('fecloader')
+    .usage('$0 <cmd> [args]')
+    .command(
+        'create',
+        'create the SQL schema used by the loader; uses PGHOST, PGDATABASE, PGUSER, PGPASSWORD env vars to authenticate',
+        yargs => {},
+        commands.psql
+    )
+    .command(
+        'api [fec_key]',
+        'get a list of the latest e-filings from the FEC API',
+        yargs => {
+            yargs
+                .env('FEC')
+                .positional('fec_key',{
+                    alias: 'key',
+                    describe: 'data.gov API key authorizing access to the FEC API, can set as env var FEC_KEY'
+                });
+        },
+        commands.api
+    )
+    .command(
+        'rss',
+        'get a list of the latest e-filings from the FEC\'s RSS feed',
+        yargs => {},
+        commands.rss
+    )
+    .command(
+        'json [filing_id]',
+        'pipe in an .fec file and get newline-delimited JSON as output',
+        yargs => {
+            yargs.positional('filing_id', {
+                describe: 'the filing ID of the filing'
+            });
+        },
+        commands.json
+    )
+    .command(
+        'psql [filing_id]',
+        'pipe in an .fec file and get psql COPY commands as output',
+        yargs => {
+            yargs.positional('filing_id', {
+                describe: 'the filing ID of the filing'
+            });
+        },
+        commands.psql
+    )
+    .recommendCommands()
+    .demandCommand()
+    .help()
+    .argv;
