@@ -14,8 +14,14 @@
     "update-notifier": "^3.0.0",
     "yargs": "^13.2.2"
   },
+  "scripts": {
+    "test": "jest"
+  },
   "main": "index.js",
   "bin": {
     "fecloader": "./bin/fecloader"
+  },
+  "devDependencies": {
+    "jest": "^24.8.0"
   }
 }

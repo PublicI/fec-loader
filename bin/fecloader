@@ -14,7 +14,7 @@ yargs
         'create',
         'create the SQL schema used by the loader; uses PGHOST, PGDATABASE, PGUSER, PGPASSWORD env vars to authenticate',
         yargs => {},
-        commands.psql
+        commands.create
     )
     .command(
         'api [fec_key]',
@@ -27,13 +27,21 @@ yargs
                     describe: 'data.gov API key authorizing access to the FEC API, can set as env var FEC_KEY'
                 });
         },
-        commands.api
+        async args => {
+            let filings = await commands.api(args);
+            
+            console.log(filings.join('\n'));
+        }
     )
     .command(
         'rss',
         'get a list of the latest e-filings from the FEC\'s RSS feed',
         yargs => {},
-        commands.rss
+        async args => {
+            let filings = await commands.rss(args);
+
+            console.log(filings.join('\n'));
+        }
     )
     .command(
         'json [filing_id]',
