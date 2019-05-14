@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+
+const commands = require('../commands'),
+    pkg = require('../package.json'),
+    updateNotifier = require('update-notifier'),
+    yargs = require('yargs');
+
+updateNotifier({pkg}).notify();
+
+yargs
+    .usage('$0 <cmd> [args]')
+    .env('FEC')
+    .command(commands.init)
+    .command(commands.list)
+    .command(commands.convert)
+    .recommendCommands()
+    .demandCommand()
+    .help()
+    .argv;

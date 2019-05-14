@@ -1,9 +1,10 @@
 
 module.exports = {
     api: require('./lib/api'),
-    create: require('./lib/create'),
+    format: require('./lib/format'),
     increment: require('./lib/increment'),
-    json: require('./lib/json'),
+    init: require('./lib/init'),
+    ndjson: require('./lib/ndjson'),
     psql: require('./lib/psql'),
     rss: require('./lib/rss')
 };
