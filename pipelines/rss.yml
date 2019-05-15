@@ -6,7 +6,7 @@ transform:
   cmd:
   - bash
   stdin:
-  - ./bin/rss2fec | head -n 100 | while read url; do touch "/pfs/out/$(echo $url | tr -dc '0-9').fec"; done
+  - ./bin/fec list --rss --headers=false --format=tsv --columns=fec_url | head -n 100 | while read url; do touch "/pfs/out/$(echo $url | tr -dc '0-9').fec"; done
 parallelism_spec:
   constant: 1
 input:

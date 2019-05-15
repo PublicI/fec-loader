@@ -6,7 +6,7 @@ transform:
   cmd:
   - bash
   stdin:
-  - for file in $(find /pfs/filings/ -name "*.fec.gz"); do gunzip < $file | (echo "DELETE FROM fec_filings WHERE filing_id = $(echo $file | tr -dc '0-9');" && cat) | ./bin/fec2psql $(echo $file | tr -dc '0-9') | psql -v ON_ERROR_STOP=on --single-transaction 2> "/pfs/out/"$(echo $file | tr -dc '0-9')".log"; done
+  - for file in $(find /pfs/filings/ -name "*.fec.gz"); do gunzip < $file | (echo "DELETE FROM fec_filings WHERE filing_id = $(echo $file | tr -dc '0-9');" && cat) | ./bin/fec convert --format=psql $(echo $file | tr -dc '0-9') | psql -v ON_ERROR_STOP=on --single-transaction 2> "/pfs/out/"$(echo $file | tr -dc '0-9')".log"; done
   secrets:
     - name: pachyderm-postgres-politics-auth
       env_var: PGHOST
