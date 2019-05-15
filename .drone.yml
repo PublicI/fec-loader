@@ -1,4 +1,14 @@
 pipeline:
+  install:
+    image: node:10.15-alpine
+    commands:
+      - npm ci
+
+  test:
+    image: node:10.15-alpine
+    commands:
+      - npm test
+
   build_dry_run:
     image: plugins/docker
     secrets: [ docker_username, docker_password ]
