@@ -65,11 +65,14 @@ module.exports = {
             : null;
 
         try {
-            let filings = await (options.rss ? rss : api)(options);
+            // let filings = await (options.rss ? rss : api)(options);
 
+            (options.rss ? rss : api)(options)
+
+            /*
             console.log(
                 format(filings, options.format, columns, options.headers, options.columnLength)
-            );
+            );*/
         } catch (err) {
             console.error(err);
         }
