@@ -21,7 +21,7 @@ module.exports = {
         },
         format: {
             type: 'string',
-            default: 'table',
+            default: 'tsv',
             choices: ['table','ndjson','json','csv','tsv'],
             describe: 'choose output format'
         },
@@ -65,9 +65,10 @@ module.exports = {
             : null;
 
         try {
-            // let filings = await (options.rss ? rss : api)(options);
+            let filings = await (options.rss ? rss : api)(options);
 
-            (options.rss ? rss : api)(options)
+            format(filings, options.format, columns)
+                .pipe(process.stdout);
 
             /*
             console.log(

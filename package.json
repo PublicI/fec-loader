@@ -5,7 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "@publici/fec-model": "^1.0.0-alpha.4",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "chalk": "^2.4.2",
     "d3-dsv": "^1.1.1",
     "fast-csv": "^2.5.0",
