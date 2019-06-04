@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 for file in $(find /pfs/filings/ -name "*.fec.gz");
 do
 	SUMMARY=$(gunzip < $file | head -n 10 | ./bin/fec convert | sed -n 2p)

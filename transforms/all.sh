@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 mkdir -p ./data/rss
 mkdir -p ./data/download
 mkdir -p ./data/load

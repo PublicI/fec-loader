@@ -1,0 +1,17 @@
+---
+pipeline:
+  name: fec-raw-load-errors
+transform:
+  image: publicintegrity/fec-loader
+  cmd:
+  - bash
+  stdin:
+  - ./transforms/load.sh /pfs/load/ /pfs/out/
+parallelism_spec:
+  constant: 1
+datum_tries: 2
+input:
+  pfs:
+    name: load
+    repo: fec-raw-load-filings
+    glob: /*

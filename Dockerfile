@@ -7,6 +7,7 @@ WORKDIR /usr/src/app
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 COPY . /usr/src/app
+RUN apk add aws-cli --update-cache --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && rm -rf /var/cache/apk/*
 RUN apk --update add jq sed curl gzip && rm -rf /var/cache/apk/*
 RUN npm ci && npm cache clean --force
 
