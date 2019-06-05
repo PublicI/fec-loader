@@ -13,6 +13,7 @@ pipeline:
     image: plugins/docker
     secrets: [ docker_username, docker_password ]
     repo: publicintegrity/fec-loader
+    cache_from: "publicintegrity/fec-loader:latest"
     tags:
       - ${DRONE_COMMIT_SHA:0:12}
       - latest
@@ -24,6 +25,7 @@ pipeline:
     image: plugins/docker
     secrets: [ docker_username, docker_password ]
     repo: publicintegrity/fec-loader
+    cache_from: "publicintegrity/fec-loader:latest"
     tags:
       - ${DRONE_COMMIT_SHA:0:12}
       - latest
