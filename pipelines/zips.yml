@@ -12,4 +12,4 @@ parallelism_spec:
 input:
   cron:
     name: tick
-    spec: "0 * * * *"
+    spec: "0 8 * * *"
