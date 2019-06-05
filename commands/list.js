@@ -67,13 +67,16 @@ module.exports = {
         try {
             let filings = await (options.rss ? rss : api)(options);
 
-            format(filings, options.format, columns)
+            // prevent EPIPE errors when piping to head
+            process.stdout.on('error', function( err ) {
+                if (err.code == "EPIPE") {
+                    process.exit(0);
+                }
+            });
+
+            format(filings, options.format, columns, options.headers)
                 .pipe(process.stdout);
 
-            /*
-            console.log(
-                format(filings, options.format, columns, options.headers, options.columnLength)
-            );*/
         } catch (err) {
             console.error(err);
         }
