@@ -14,5 +14,5 @@ input:
   pfs:
     name: zips
     repo: fec-raw-zip-filing-check
-    glob: /*
+    glob: /*/*
     empty_files: true
