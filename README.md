@@ -10,7 +10,7 @@ It requires [Node](https://nodejs.org/). It uses [fec-parse](https://github.com/
 
 To try converting a filing to newline-separated JSON without installing fec-loader, paste the following into a terminal:
 ```bash
-FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p @publici/fec-loader convert $FILING_ID > $FILING_ID".ndjson"
+FILING_ID=1283013; curl -s "https://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p @publici/fec-loader convert $FILING_ID > $FILING_ID".ndjson"
 ```
 ## Install
 
@@ -31,7 +31,7 @@ fec init
 To load a filing from the FEC into a Postgres database, run:
 ```bash
 export PGHOST=<database host> PGDATABASE=<database name> PGUSER=<database user> PGPASSWORD=<database password>
-FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | fec convert $FILING_ID --format=psql | psql
+FILING_ID=1283013; curl -s "https://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | fec convert $FILING_ID --format=psql | psql
 ```
 
 To list the filings available from the FEC's RSS feed run:
@@ -47,5 +47,5 @@ for url in $(fec list --rss --headers=false --columns=fec_url --format=tsv | hea
 
 To get just a summary line as JSON:
 ```bash
-FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | head -n 10 | fec convert | sed -n 2p
+FILING_ID=1283013; curl -s "https://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | head -n 10 | fec convert | sed -n 2p
 ```
