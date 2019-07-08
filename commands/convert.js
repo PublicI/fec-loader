@@ -1,7 +1,7 @@
 const fec = require('../');
 
 module.exports = {
-    command: 'convert',
+    command: 'convert [filing_id]',
     describe:
         'Pipe in an .fec file to convert it to newline-delimited JSON or psql COPY commands.',
     builder(yargs) {

@@ -42,7 +42,7 @@ fec list --rss
 To load the most recent five filings from the FEC's RSS feed, run:
 
 ```bash
-for url in $(fec list --rss --headers=false --columns=fec_url --format=tsv | head -n 5); do curl -s $url | fec convert $(echo $url | tr -dc '0-9') --format=psql | psql -v ON_ERROR_STOP=on --single-transaction; done
+for url in $(fec list --rss --headers=false --columns=fec_url --format=tsv | head -n 5); do FILING_ID=$(echo $url | tr -dc '0-9'); curl -s "https://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | fec convert $FILING_ID --format=psql | psql -v ON_ERROR_STOP=on --single-transaction; done
 ```
 
 To get just a summary line as JSON:

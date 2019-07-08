@@ -22,7 +22,7 @@ module.exports = {
         format: {
             type: 'string',
             default: 'tsv',
-            choices: ['table','ndjson','json','csv','tsv'],
+            choices: ['ndjson','csv','tsv'], // 'json', 'table'
             describe: 'choose output format'
         },
         headers: {
@@ -33,13 +33,13 @@ module.exports = {
         columns: {
             type: 'string',
             describe: 'choose columns to show'
-        },
+        }/*,
         columnLength: {
             type: 'integer',
             default: 30,
             describe:
                 'how many characters to show in each table cell'
-        }
+        }*/
     },
     handler: async options => {
         if (!options.rss && !options.key) {
