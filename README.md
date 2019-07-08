@@ -10,13 +10,13 @@ It requires [Node](https://nodejs.org/). It uses [fec-parse](https://github.com/
 
 To try converting a filing to newline-separated JSON without installing fec-loader, paste the following into a terminal:
 ```bash
-FILING_ID=1283013; curl -s "https://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p @publici/fec-loader convert $FILING_ID > $FILING_ID".ndjson"
+FILING_ID=1283013; curl -s "https://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p github:PublicI/fec-loader#subcommands convert $FILING_ID > $FILING_ID".ndjson"
 ```
 ## Install
 
 To install:
 ```bash
-npm install -g @publici/fec-loader
+npm install -g github:PublicI/fec-loader#subcommands
 ```
 ## Setup
 
