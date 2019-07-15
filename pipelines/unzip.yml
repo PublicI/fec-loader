@@ -14,5 +14,5 @@ input:
   pfs:
     name: download
     repo: fec-raw-zips-download
-    glob: /*
+    glob: /**
     empty_files: true
