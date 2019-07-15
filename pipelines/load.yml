@@ -21,7 +21,8 @@ transform:
       env_var: PGPASSWORD
       key: pgpassword
 parallelism_spec:
-  constant: 2
+  constant: 4
+max_queue_size: 4
 datum_tries: 2
 input:
   union:
@@ -29,7 +30,9 @@ input:
         name: filings
         repo: fec-raw-filing-download
         glob: /*
+        lazy: true
     - pfs:
         name: filings
         repo: fec-raw-filing-unzip
         glob: /*
+        lazy: true
