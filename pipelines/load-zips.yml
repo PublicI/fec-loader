@@ -1,0 +1,30 @@
+---
+pipeline:
+  name: fec-raw-load-zip-filings
+transform:
+  image: publicintegrity/fec-loader
+  cmd:
+  - bash
+  stdin:
+  - ./transforms/load.sh /pfs/filings/ /pfs/out/
+  secrets:
+    - name: pachyderm-postgres-politics-auth
+      env_var: PGHOST
+      key: pghost
+    - name: pachyderm-postgres-politics-auth
+      env_var: PGDATABASE
+      key: pgdatabase
+    - name: pachyderm-postgres-politics-auth
+      env_var: PGUSER
+      key: pguser
+    - name: pachyderm-postgres-politics-auth
+      env_var: PGPASSWORD
+      key: pgpassword
+parallelism_spec:
+  constant: 2
+datum_tries: 2
+input:
+  pfs:
+    name: filings
+    repo: fec-raw-filing-unzip
+    glob: /*
