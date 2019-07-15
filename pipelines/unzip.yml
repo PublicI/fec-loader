@@ -15,4 +15,3 @@ input:
     name: download
     repo: fec-raw-zips-download
     glob: /**
-    empty_files: true
