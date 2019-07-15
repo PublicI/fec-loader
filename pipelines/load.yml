@@ -21,16 +21,10 @@ transform:
       env_var: PGPASSWORD
       key: pgpassword
 parallelism_spec:
-  constant: 4
-max_queue_size: 4
+  constant: 2
 datum_tries: 2
 input:
-  union:
-    - pfs:
-        name: filings
-        repo: fec-raw-filing-download
-        glob: /*
-    - pfs:
-        name: filings
-        repo: fec-raw-filing-unzip
-        glob: /*
+  pfs:
+    name: filings
+    repo: fec-raw-filing-download
+    glob: /*
