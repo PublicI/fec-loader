@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -euo pipefail
-
 for file in $(find /pfs/filings/ -name "*.fec.gz");
 do
 	echo "getting summary"
