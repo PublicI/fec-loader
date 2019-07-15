@@ -18,5 +18,5 @@ write_zips () {
 	done
 }
 
-write_zips $1 'electronic' '201'
-write_zips $1 'paper' '201'
+write_zips $1 'electronic' '2019'
+write_zips $1 'paper' '2019'

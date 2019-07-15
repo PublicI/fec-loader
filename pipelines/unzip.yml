@@ -1,0 +1,18 @@
+---
+pipeline:
+  name: fec-raw-filing-unzip
+transform:
+  image: publicintegrity/fec-loader
+  cmd:
+  - bash
+  stdin:
+  - ./transforms/unzip.sh /pfs/download/ /pfs/out/
+parallelism_spec:
+  constant: 2
+datum_tries: 2
+input:
+  pfs:
+    name: download
+    repo: fec-raw-zips-download
+    glob: /*
+    empty_files: true

@@ -24,8 +24,14 @@ parallelism_spec:
   constant: 2
 datum_tries: 2
 input:
-  pfs:
-    name: filings
-    repo: fec-raw-filing-download
-    glob: /*
-    lazy: true
+  union:
+    - pfs:
+        name: filings
+        repo: fec-raw-filing-download
+        glob: /*
+        lazy: true
+    - pfs:
+        name: filings
+        repo: fec-raw-filing-unzip
+        glob: /*
+        lazy: true
