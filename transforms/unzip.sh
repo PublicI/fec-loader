@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-for file in $(find $1 -name "201907*.zip" -not -name "*.nofiles.*");
+for file in $(find $1 -name "2019*.zip" -not -name "*.nofiles.*");
 do
 	base=$(basename $file .zip)
 	path="/tmp/"$base
