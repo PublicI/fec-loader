@@ -7,7 +7,7 @@ do
 	base=$(basename $file .zip)
 	path="/tmp/"$base
 	mkdir -p $path
-	unzip -f -qq -d $path $file
+	unzip -o -qq -d $path $file
 	for filing in $(find $path -name "*.fec");
 	do
 		cat $filing | gzip -9 > $2$(basename $filing)".gz"
