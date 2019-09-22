@@ -34,9 +34,9 @@ pipeline:
       environment: production
 
   pipeline_update:
-    image: publicintegrity/pachctl
+    image: "publicintegrity/pachctl:latest"
     environment:
-      - PACHD_ADDRESS=pachd-api-grpc.pachyderm.svc.cluster.local:650
+      - PACHD_ADDRESS=pachd-api-grpc.pachyderm.svc.cluster.local:30650
       - IMAGE_TAG=${DRONE_COMMIT_SHA:0:12}
     commands:
       - for file in $(find ./pipelines -name "*.yml"); do cat $file | yq '.transform.image += ":'$${IMAGE_TAG}'"' | pachctl update pipeline || true; done
