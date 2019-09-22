@@ -37,10 +37,11 @@ pipeline:
     image: "publicintegrity/pachctl:554b1a5ddfe3"
     environment:
       - PACHD_ADDRESS=pachd-api-grpc.pachyderm.svc.cluster.local:30650
+      - IMAGE_NAME=publicintegrity/fec-loader
       - IMAGE_TAG=${DRONE_COMMIT_SHA:0:12}
     commands:
-      - for file in $(find ./pipelines -name "*.yml"); do cat $file | yq '.transform.image += ":'$${IMAGE_TAG}'"' | pachctl update pipeline || true; done
-      - for file in $(find ./pipelines -name "*.yml"); do cat $file | yq '.transform.image += ":'$${IMAGE_TAG}'"' | pachctl create pipeline || true; done
+      - for file in $(find ./pipelines -name "*.yml"); do yq write $file transform.image "$${IMAGE_NAME}:'$${IMAGE_TAG}'"' | pachctl update pipeline || true; done
+      - for file in $(find ./pipelines -name "*.yml"); do yq write $file transform.image "$${IMAGE_NAME}:'$${IMAGE_TAG}'"' | pachctl create pipeline || true; done
     when:
       event: deployment
       environment: production
