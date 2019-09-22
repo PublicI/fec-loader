@@ -34,7 +34,7 @@ pipeline:
       environment: production
 
   pipeline_update:
-    image: "publicintegrity/pachctl:latest"
+    image: "publicintegrity/pachctl:554b1a5ddfe3"
     environment:
       - PACHD_ADDRESS=pachd-api-grpc.pachyderm.svc.cluster.local:30650
       - IMAGE_TAG=${DRONE_COMMIT_SHA:0:12}
