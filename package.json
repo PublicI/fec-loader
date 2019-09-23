@@ -4,19 +4,19 @@
   "description": "Loads FEC data into a database",
   "license": "MIT",
   "dependencies": {
-    "@publici/fec-model": "^1.0.0-alpha.4",
+    "@publici/fec-model": "^1.0.1",
     "axios": "^0.19.0",
     "chalk": "^2.4.2",
     "d3-dsv": "^1.1.1",
-    "fast-csv": "^2.5.0",
+    "fast-csv": "^2.3.0",
     "fec-parse": "^0.19.0",
     "moment": "^2.24.0",
-    "pickup": "^8.0.1",
-    "table": "^5.3.3",
+    "pickup": "^8.1.0",
+    "table": "^5.4.6",
     "text-table": "^0.2.0",
     "through2": "^3.0.1",
-    "update-notifier": "^3.0.0",
-    "yargs": "^13.2.2"
+    "update-notifier": "^3.0.1",
+    "yargs": "^14.0.0"
   },
   "scripts": {
     "test": "jest"
@@ -26,6 +26,6 @@
     "fec": "./bin/fec"
   },
   "devDependencies": {
-    "jest": "^24.8.0"
+    "jest": "^24.9.0"
   }
 }
