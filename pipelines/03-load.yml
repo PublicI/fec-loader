@@ -9,16 +9,16 @@ transform:
   - ./transforms/load.sh /pfs/filings/ /pfs/out/
   secrets:
     - name: pachyderm-postgres-politics-auth
-      envVar: PGHOST
+      env_var: PGHOST
       key: pghost
     - name: pachyderm-postgres-politics-auth
-      envVar: PGDATABASE
+      env_var: PGDATABASE
       key: pgdatabase
     - name: pachyderm-postgres-politics-auth
-      envVar: PGUSER
+      env_var: PGUSER
       key: pguser
     - name: pachyderm-postgres-politics-auth
-      envVar: PGPASSWORD
+      env_var: PGPASSWORD
       key: pgpassword
 parallelism_spec:
   constant: 2
