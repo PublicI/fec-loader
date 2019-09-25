@@ -1,0 +1,15 @@
+---
+pipeline:
+  name: fec-raw-zip-filing-check
+transform:
+  image: publicintegrity/fec-loader
+  cmd:
+  - bash
+  stdin:
+  - ./transforms/zips.sh /pfs/out/
+parallelism_spec:
+  constant: 1
+input:
+  cron:
+    name: tick
+    spec: "0 8 * * *"

@@ -1,29 +1,29 @@
-# fec-loader
+# fec-cli
 
 A set of flexible command line utilities designed to discover, convert and load raw FEC filings into a database in a fast, streaming manner.
 
-`fec-loader` is about nine times faster than similar Python solutions. For example, on a recent MacBook Air, a 2.3 gigabyte ActBlue filing parses in three minutes instead of 23 minutes.
+`fec` is about nine times faster than similar solutions. For example, on a recent MacBook Air, a 2.3 gigabyte ActBlue filing parses in three minutes instead of 23 minutes.
 
-It requires [Node](https://nodejs.org/) and Bash. It uses [fec-parse](https://github.com/PublicI/fec-parse).
+It requires [Node](https://nodejs.org/). It uses [fec-parse](https://github.com/PublicI/fec-parse).
 
 ## Try
 
 To try converting a filing to newline-separated JSON without installing fec-loader, paste the following into a terminal:
 ```bash
-FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p @publici/fec-loader fec2json $FILING_ID > $FILING_ID".ndjson"
+FILING_ID=1283013; curl -s "https://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | npx -p github:PublicI/fec-loader#subcommands convert $FILING_ID > $FILING_ID".ndjson"
 ```
 ## Install
 
 To install:
 ```bash
-npm install -g @publici/fec-loader
+npm install -g github:PublicI/fec-loader#subcommands
 ```
 ## Setup
 
 To set up a Postgres database for FEC filings and the environment variables needed to connect:
 ```bash
 export PGHOST=<database host> PGDATABASE=<database name> PGUSER=<database user> PGPASSWORD=<database password>
-createfecschema
+fec init
 ```
 
 ## Use
@@ -31,21 +31,21 @@ createfecschema
 To load a filing from the FEC into a Postgres database, run:
 ```bash
 export PGHOST=<database host> PGDATABASE=<database name> PGUSER=<database user> PGPASSWORD=<database password>
-FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | fec2psql $FILING_ID | psql
+FILING_ID=1283013; curl -s "https://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | fec convert $FILING_ID --format=psql | psql
 ```
 
 To list the filings available from the FEC's RSS feed run:
 ```bash
-rss2fec
+fec list --rss
 ```
 
 To load the most recent five filings from the FEC's RSS feed, run:
 
 ```bash
-rss2psql | psql
+for url in $(fec list --rss --headers=false --columns=fec_url --format=tsv | head -n 5); do FILING_ID=$(echo $url | tr -dc '0-9'); curl -s "https://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | fec convert $FILING_ID --format=psql | psql -v ON_ERROR_STOP=on --single-transaction; done
 ```
 
 To get just a summary line as JSON:
 ```bash
-FILING_ID=1283013; curl -s "http://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | head -n 10 | fec2json | sed -n 2p
+FILING_ID=1283013; curl -s "https://docquery.fec.gov/dcdev/posted/"$FILING_ID".fec" | head -n 10 | fec convert | sed -n 2p
 ```
