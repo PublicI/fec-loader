@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`api 1`] = `
+Array [
+  Object {
+    "fec_file_id": 24,
+  },
+]
+`;

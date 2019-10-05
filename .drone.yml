@@ -4,10 +4,10 @@ pipeline:
     commands:
       - npm ci
 
-  # test:
-  #   image: node:10.15-alpine
-  #   commands:
-  #     - npm test
+  test:
+    image: node:10.15-alpine
+    commands:
+      - npm test
 
   build_dry_run:
     image: plugins/docker
