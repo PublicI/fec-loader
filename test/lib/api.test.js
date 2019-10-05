@@ -1,25 +1,27 @@
-const { ObjectWritableMock } = require('stream-mock');
+const { ObjectReadableMock, ObjectWritableMock } = require('stream-mock');
 
-jest.mock('isomorphic-unfetch');
-const fetch = require('isomorphic-unfetch');
+jest.mock('cross-fetch');
+const fetch = require('cross-fetch');
 
 const api = require('../../lib/api');
 
 test('api', async done => {
+    const input = JSON.stringify({
+        results: [
+            {
+                fec_file_id: 'FEC-24'
+            }
+        ]
+    });
+
+    const reader = new ObjectReadableMock(input);
+    const writer = new ObjectWritableMock();
+
     fetch.mockReturnValue(
         Promise.resolve({
-            json: () =>
-                Promise.resolve({
-                    results: [
-                        {
-                            fec_file_id: 'FEC-24'
-                        }
-                    ]
-                })
+            body: reader
         })
     );
-
-    const writer = new ObjectWritableMock();
 
     const stream = await api({
         key: 'example'
@@ -28,6 +30,7 @@ test('api', async done => {
     stream.pipe(writer);
 
     writer.on('finish', () => {
+        expect(fetch.mock.calls).toMatchSnapshot();
         expect(writer.data).toMatchSnapshot();
         done();
     });
