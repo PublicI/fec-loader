@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rss 1`] = `
+Array [
+  Array [
+    "http://efilingapps.fec.gov/rss/generate?preDefinedFilingType=ALL",
+  ],
+]
+`;
+
+exports[`rss 2`] = `
+Array [
+  Object {
+    "committee_id": "C00411694",
+    "committee_name": "SALTCHUK RESOURCES, INC. PAC",
+    "coverage_end_date": "09-30-2019",
+    "coverage_start_date": "09-01-2019",
+    "document_description": "OCTOBER MONTHLY 2019",
+    "fec_file_id": "1354911",
+    "fec_url": "http://docquery.fec.gov/dcdev/posted/1354911.fec",
+    "form_type": "F3XN",
+  },
+]
+`;
