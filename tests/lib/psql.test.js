@@ -1,14 +1,13 @@
 const { ObjectReadableMock, ObjectWritableMock } = require('stream-mock');
-const { advanceTo } = require('jest-date-mock');
 
 const psql = require('../../lib/psql');
 const fs = require('fs');
 
+Date.now = jest.fn(() => 1487076708000);
+
 test('psql', async done => {
     const input = fs.createReadStream(__dirname + '/../fixtures/989514.fec');
     const writer = new ObjectWritableMock();
-
-    advanceTo(new Date(2019, 10, 5, 0, 0, 0));
 
     psql({
         in: input,

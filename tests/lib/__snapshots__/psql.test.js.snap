@@ -4,7 +4,7 @@ exports[`psql 1`] = `
 Array [
   "COPY fec_filings (\\"record_type\\", \\"ef_type\\", \\"fec_version\\", \\"soft_name\\", \\"soft_ver\\", \\"report_id\\", \\"report_number\\", \\"comment\\", \\"filing_id\\", \\"created_date\\", \\"updated_date\\") FROM STDIN;
 ",
-  "HDR	FEC	8.1	CMDI CRIMSON FILER	2.0	\\\\N	\\\\N	\\\\N	\\\\N	2019-11-05T05:00:00.000Z	2019-11-05T05:00:00.000Z
+  "HDR	FEC	8.1	CMDI CRIMSON FILER	2.0	\\\\N	\\\\N	\\\\N	\\\\N	2017-02-14T12:51:48.000Z	2017-02-14T12:51:48.000Z
 ",
   "\\\\.
 ",
