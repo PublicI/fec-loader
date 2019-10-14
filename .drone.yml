@@ -40,7 +40,7 @@ pipeline:
       - IMAGE_NAME=publicintegrity/fec-loader
       - IMAGE_TAG=${DRONE_COMMIT_SHA:0:12}
     commands:
-      - cat ./pipelines/*yml | yq write -d'*' - transform.image "$${IMAGE_NAME}:$${IMAGE_TAG}" | pachctl update pipeline
+      - for file in $(find ./pipelines -name "*.yml"); do yq write -d'*' $file transform.image "$${IMAGE_NAME}:$${IMAGE_TAG}" | yq read -j -; done | pachctl update pipeline
     when:
       event: deployment
       environment: production
