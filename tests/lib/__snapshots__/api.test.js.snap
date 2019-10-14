@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`api 1`] = `
+Array [
+  Array [
+    "https://api.open.fec.gov/v1/efile/filings?sort=-receipt_date&per_page=100&page=1&api_key=example",
+  ],
+]
+`;
+
+exports[`api 2`] = `
+Array [
+  Object {
+    "fec_file_id": 24,
+  },
+]
+`;
