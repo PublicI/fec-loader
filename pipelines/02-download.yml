@@ -15,4 +15,3 @@ input:
     name: check
     repo: fec-raw-rss-filing-check
     glob: /*
-    empty_files: true
