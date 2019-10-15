@@ -28,4 +28,3 @@ input:
     name: filings
     repo: fec-raw-filing-unzip
     glob: /*
-    lazy: true
