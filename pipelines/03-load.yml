@@ -28,3 +28,4 @@ input:
     name: filings
     repo: fec-raw-filing-download
     glob: /*
+    lazy: true
