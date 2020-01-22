@@ -13,4 +13,3 @@ input:
   cron:
     name: tick
     spec: "*/1 * * * *"
-    overwrite: true
