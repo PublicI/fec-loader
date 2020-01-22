@@ -19,3 +19,18 @@ test('psql', async done => {
         done();
     });
 });
+
+test('psql end of file escape', async done => {
+    const input = fs.createReadStream(__dirname + '/../fixtures/psql-end-marker.fec');
+    const writer = new ObjectWritableMock();
+
+    psql({
+        in: input,
+        out: writer
+    });
+
+    writer.on('finish', () => {
+        expect(writer.data).toMatchSnapshot();
+        done();
+    });
+});
