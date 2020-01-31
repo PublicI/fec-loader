@@ -12,5 +12,5 @@ parallelism_spec:
 input:
   cron:
     name: tick
-    spec: "0 8 * * *"
+    spec: "0 11 * * *"
     overwrite: true
