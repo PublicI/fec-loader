@@ -15,7 +15,7 @@
     "pickup": "^8.1.0",
     "table": "^5.4.6",
     "text-table": "^0.2.0",
-    "through2": "^3.0.1",
+    "through2": "^4.0.2",
     "through2-map": "^3.0.0",
     "update-notifier": "^4.1.0",
     "yargs": "^15.3.1"
