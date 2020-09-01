@@ -28,7 +28,7 @@
     "fec": "./bin/fec"
   },
   "devDependencies": {
-    "jest": "^25.2.7",
+    "jest": "^26.4.2",
     "stream-mock": "^2.0.5"
   }
 }
